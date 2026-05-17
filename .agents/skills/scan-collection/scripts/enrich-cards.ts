@@ -8,6 +8,11 @@ interface DetectedCard {
   quantity: number;
   confidence: "high" | "medium" | "low";
   sourcePhoto: string;
+  gridPosition?: string;
+  setName?: string;
+  collectorNumber?: string;
+  validatedName?: string;
+  validationStatus?: "confirmed" | "corrected" | "flagged";
 }
 
 interface RawCardsOutput {
@@ -15,11 +20,16 @@ interface RawCardsOutput {
     source: string;
     scanDate: string;
     photoDirectory: string;
-    photosProcessed: number;
-    photosSkipped: number;
+    croppedDirectory?: string;
+    cardsScanned?: number;
+    photosProcessed?: number;
+    photosSkipped?: number;
     totalCardsDetected: number;
     highConfidenceCards: number;
     uncertainCards: number;
+    validatedCards?: number;
+    correctedCards?: number;
+    flaggedCards?: number;
   };
   cards: DetectedCard[];
   warnings: (DetectedCard | string)[];
@@ -64,6 +74,8 @@ interface CollectionOutput {
 
 interface ScryfallIdentifier {
   name?: string;
+  set?: string;
+  collector_number?: string;
 }
 
 interface ScryfallBatchResponse {
@@ -210,19 +222,32 @@ async function enrichCards(
   let enrichedCount = 0;
   let notFoundCount = 0;
 
-  // Build lookup from name → quantity (sum duplicates from different photos)
-  const nameToQuantity = new Map<string, number>();
+  // Build lookup from name → { quantity, setName, collectorNumber }
+  const nameToInfo = new Map<string, { quantity: number; setName?: string; collectorNumber?: string }>();
   for (const card of detectedCards) {
-    const existing = nameToQuantity.get(card.name) ?? 0;
-    nameToQuantity.set(card.name, existing + card.quantity);
+    const existing = nameToInfo.get(card.name);
+    if (existing) {
+      existing.quantity += card.quantity;
+    } else {
+      nameToInfo.set(card.name, {
+        quantity: card.quantity,
+        setName: card.setName,
+        collectorNumber: card.collectorNumber,
+      });
+    }
   }
 
-  const entries = Array.from(nameToQuantity.entries());
+  const entries = Array.from(nameToInfo.entries());
 
   // Process in batches of 75
   for (let i = 0; i < entries.length; i += BATCH_SIZE) {
     const batch = entries.slice(i, i + BATCH_SIZE);
-    const identifiers: ScryfallIdentifier[] = batch.map(([name]) => ({ name }));
+    const identifiers: ScryfallIdentifier[] = batch.map(([name, info]) => {
+      const id: ScryfallIdentifier = { name };
+      if (info.setName) id.set = info.setName;
+      if (info.collectorNumber) id.collector_number = info.collectorNumber;
+      return id;
+    });
 
     if (i > 0) {
       await sleep(RATE_LIMIT_MS);
@@ -234,8 +259,8 @@ async function enrichCards(
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       warnings.push(`Batch request failed: ${msg}`);
-      for (const [name, quantity] of batch) {
-        result.push(makePartialCard(name, quantity));
+      for (const [name, info] of batch) {
+        result.push(makePartialCard(name, info.quantity));
         notFoundCount++;
       }
       continue;
@@ -246,7 +271,7 @@ async function enrichCards(
     for (const apiCard of batchResponse.data || []) {
       // Try to match Scryfall result back to the detected name that requested it
       const detectedName = batch.find(([n]) => n.toLowerCase() === apiCard.name.toLowerCase())?.[0] ?? apiCard.name;
-      const quantity = nameToQuantity.get(detectedName) ?? nameToQuantity.get(apiCard.name) ?? 1;
+      const quantity = nameToInfo.get(detectedName)?.quantity ?? nameToInfo.get(apiCard.name)?.quantity ?? 1;
       result.push(mapScryfallCard(apiCard, apiCard.name, quantity));
       foundDetectedNames.add(detectedName);
       // Also mark by canonical name in case it differs
@@ -258,16 +283,16 @@ async function enrichCards(
 
     // Handle not-found cards with fuzzy fallback
     const notFoundInBatch = batch.filter(([name]) => !foundDetectedNames.has(name));
-    for (const [name, quantity] of notFoundInBatch) {
+    for (const [name, info] of notFoundInBatch) {
       await sleep(RATE_LIMIT_MS);
 
       const fuzzyResult = await fetchNamed(name);
       if (fuzzyResult) {
-        result.push(mapScryfallCard(fuzzyResult, fuzzyResult.name, quantity));
+        result.push(mapScryfallCard(fuzzyResult, fuzzyResult.name, info.quantity));
         enrichedCount++;
       } else {
         warnings.push(`Card not found on Scryfall: "${name}"`);
-        result.push(makePartialCard(name, quantity));
+        result.push(makePartialCard(name, info.quantity));
         notFoundCount++;
       }
     }
