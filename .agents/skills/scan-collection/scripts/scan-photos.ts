@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, readdirSync, statSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, extname, basename } from "node:path";
 import OpenAI from "openai";
 import sharp from "sharp";
@@ -72,20 +72,22 @@ function isImageFile(filename: string): boolean {
   return SUPPORTED_EXTENSIONS.includes(ext);
 }
 
-async function resizeIfNeeded(filePath: string): Promise<Buffer> {
+async function resizeIfNeeded(filePath: string): Promise<{ buffer: Buffer; wasResized: boolean }> {
   const stat = statSync(filePath);
   if (stat.size <= MAX_IMAGE_BYTES) {
-    return readFileSync(filePath);
+    return { buffer: readFileSync(filePath), wasResized: false };
   }
   console.error(`  Resizing ${basename(filePath)} (${(stat.size / 1024 / 1024).toFixed(1)}MB)...`);
-  return await sharp(filePath)
+  const buffer = await sharp(filePath)
     .resize({ width: 2048, withoutEnlargement: true })
     .jpeg({ quality: 85 })
     .toBuffer();
+  return { buffer, wasResized: true };
 }
 
-function imageToDataUri(buffer: Buffer, filePath: string): string {
-  const ext = extname(filePath).toLowerCase();
+function imageToDataUri(buffer: Buffer, wasResized: boolean, filePath: string): string {
+  // If image was resized, sharp converts to JPEG regardless of original format
+  const ext = wasResized ? ".jpg" : extname(filePath).toLowerCase();
   const mimeMap: Record<string, string> = {
     ".jpg": "image/jpeg",
     ".jpeg": "image/jpeg",
@@ -125,17 +127,18 @@ function isValidConfidence(c: string): c is "high" | "medium" | "low" {
 async function scanPhoto(
   client: OpenAI,
   filePath: string,
-  retryCount = 0
+  jsonRetry = false,
+  apiRetries = 0
 ): Promise<{ cards: DetectedCard[]; warnings: (DetectedCard | string)[]; skipped: boolean }> {
   const fileName = basename(filePath);
   const cards: DetectedCard[] = [];
   const warnings: (DetectedCard | string)[] = [];
 
   try {
-    const imageBuffer = await resizeIfNeeded(filePath);
-    const dataUri = imageToDataUri(imageBuffer, filePath);
+    const { buffer: imageBuffer, wasResized } = await resizeIfNeeded(filePath);
+    const dataUri = imageToDataUri(imageBuffer, wasResized, filePath);
 
-    const prompt = retryCount > 0 ? VISION_RETRY_PROMPT : VISION_PROMPT;
+    const prompt = jsonRetry ? VISION_RETRY_PROMPT : VISION_PROMPT;
 
     const response = await client.chat.completions.create({
       model: "kimi-k2.5-fast",
@@ -156,9 +159,9 @@ async function scanPhoto(
 
     const parsed = parseVisionResponse(content);
     if (!parsed) {
-      if (retryCount === 0) {
+      if (!jsonRetry) {
         console.error(`  Invalid JSON from model for ${fileName}, retrying...`);
-        return scanPhoto(client, filePath, 1);
+        return scanPhoto(client, filePath, true, 0);
       }
       warnings.push(`photo ${fileName}: model returned invalid JSON after retry`);
       return { cards, warnings, skipped: true };
@@ -181,13 +184,21 @@ async function scanPhoto(
     }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    if (retryCount < MAX_RETRIES) {
-      const delay = RETRY_BASE_MS * Math.pow(2, retryCount);
-      console.error(`  API error for ${fileName}: ${msg}. Retrying in ${delay}ms...`);
+    // Only retry on 429 (rate limit) and 5xx (server errors)
+    const status = (err as any)?.status ?? (err as any)?.statusCode ?? 0;
+    const isRetryable = status === 429 || (status >= 500 && status < 600);
+
+    if (isRetryable && apiRetries < MAX_RETRIES) {
+      const delay = RETRY_BASE_MS * Math.pow(2, apiRetries);
+      console.error(`  API error ${status} for ${fileName}. Retrying in ${delay}ms...`);
       await sleep(delay);
-      return scanPhoto(client, filePath, retryCount + 1);
+      return scanPhoto(client, filePath, jsonRetry, apiRetries + 1);
     }
-    warnings.push(`photo ${fileName}: API error after ${MAX_RETRIES} retries: ${msg}`);
+    if (!isRetryable) {
+      warnings.push(`photo ${fileName}: API error (status ${status}): ${msg}`);
+    } else {
+      warnings.push(`photo ${fileName}: API error after ${MAX_RETRIES} retries: ${msg}`);
+    }
     return { cards, warnings, skipped: true };
   }
 
@@ -279,10 +290,10 @@ async function main(): Promise<void> {
   const dedupedCards = Array.from(cardMap.values());
 
   const totalCardsDetected = dedupedCards.reduce((sum, c) => sum + c.quantity, 0);
-  const highConfidenceCards = dedupedCards.length;
-  const uncertainCards = allWarnings.filter(
-    (w) => typeof w !== "string"
-  ).length;
+  const highConfidenceCards = totalCardsDetected;
+  const uncertainCards = allWarnings
+    .filter((w): w is DetectedCard => typeof w !== "string")
+    .reduce((sum, w) => sum + w.quantity, 0);
 
   if (dedupedCards.length === 0) {
     console.error("Error: No cards confidently identified — check photo quality");
