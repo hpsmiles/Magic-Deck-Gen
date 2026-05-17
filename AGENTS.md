@@ -4,7 +4,7 @@ Magic: The Gathering deck generator that builds decks from a user's existing car
 
 ## Project Status
 
-Implemented as a set of 5 OpenCode skills (pipeline architecture). Each skill is installed at `~/.agents/skills/<skill-name>/` and contains a `SKILL.md` with agent instructions plus a `scripts/` directory with TypeScript helper scripts.
+Implemented as a set of 5 OpenCode skills (pipeline architecture). Each skill is installed at `.agents/skills/<skill-name>/` (project-local) and contains a `SKILL.md` with agent instructions plus a `scripts/` directory with TypeScript helper scripts.
 
 ## Key Domain Concepts
 
@@ -35,7 +35,7 @@ Implemented as a set of 5 OpenCode skills (pipeline architecture). Each skill is
 
 - Remote: `https://github.com/hpsmiles/Magic-Deck-Gen.git`
 - Default branch: `main`
-- Skills installed at: `~/.agents/skills/<skill-name>/`
-- Scripts run via: `cd ~/.agents/skills/<skill-name>/scripts && npx tsx <script>.ts <args>`
+- Skills installed at: `.agents/skills/<skill-name>/` (project-local)
+- Scripts run via: `cd .agents/skills/<skill-name>/scripts && npx tsx <script>.ts <args>`
 - TypeScript for all helper scripts (ES2022, Node16 module resolution)
 - Scryfall rate limit: 550ms between requests

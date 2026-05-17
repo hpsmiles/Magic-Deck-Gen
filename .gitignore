@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# TypeScript build output
+dist/
+
+# Data files (user-specific)
+collection.json
+available-pool.json
+deck.json
+validation-report.json
+optimization-log.json
+
+# OS files
+.DS_Store
+Thumbs.db
