@@ -290,7 +290,8 @@ async function main(): Promise<void> {
   const dedupedCards = Array.from(cardMap.values());
 
   const totalCardsDetected = dedupedCards.reduce((sum, c) => sum + c.quantity, 0);
-  const highConfidenceCards = totalCardsDetected;
+  // dedupedCards only contains high-confidence cards (medium/low go to warnings)
+  const highConfidenceCards = dedupedCards.reduce((sum, c) => sum + c.quantity, 0);
   const uncertainCards = allWarnings
     .filter((w): w is DetectedCard => typeof w !== "string")
     .reduce((sum, w) => sum + w.quantity, 0);

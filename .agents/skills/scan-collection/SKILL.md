@@ -12,6 +12,7 @@ Import an MTG card collection from a directory of photos. Uses Kimi K2.5 Fast vi
 - `NEURALWATT_API_KEY` environment variable must be set
 - Photos should be `.jpg`, `.jpeg`, `.png`, or `.webp` format
 - Phone camera photos are supported (handles glare, angles, varied lighting)
+- Dependencies must be installed: `cd .agents/skills/scan-collection/scripts && npm install`
 
 ## Workflow
 
@@ -46,3 +47,4 @@ Import an MTG card collection from a directory of photos. Uses Kimi K2.5 Fast vi
 - **Cards not found on Scryfall**: The vision model may have misread a card name. Check `raw-cards.json` for typos
 - **Rate limiting**: Scryfall requests are rate-limited to 550ms. Large collections may take a few minutes
 - **Large images**: Images over 20MB are automatically resized before sending to the API
+- **"npm install" fails on sharp**: The sharp package requires native build tools. On Windows, install Visual Studio Build Tools or try `npm install --ignore-scripts` then `npm install sharp` separately

@@ -6,7 +6,7 @@ import { resolve } from "node:path";
 interface DetectedCard {
   name: string;
   quantity: number;
-  confidence: string;
+  confidence: "high" | "medium" | "low";
   sourcePhoto: string;
 }
 
@@ -241,17 +241,23 @@ async function enrichCards(
       continue;
     }
 
-    // Map found cards
-    const foundNames = new Set<string>();
+    // Map found cards — track which detected names were resolved
+    const foundDetectedNames = new Set<string>();
     for (const apiCard of batchResponse.data || []) {
-      const quantity = nameToQuantity.get(apiCard.name) ?? 1;
+      // Try to match Scryfall result back to the detected name that requested it
+      const detectedName = batch.find(([n]) => n.toLowerCase() === apiCard.name.toLowerCase())?.[0] ?? apiCard.name;
+      const quantity = nameToQuantity.get(detectedName) ?? nameToQuantity.get(apiCard.name) ?? 1;
       result.push(mapScryfallCard(apiCard, apiCard.name, quantity));
-      foundNames.add(apiCard.name);
+      foundDetectedNames.add(detectedName);
+      // Also mark by canonical name in case it differs
+      if (detectedName.toLowerCase() !== apiCard.name.toLowerCase()) {
+        foundDetectedNames.add(apiCard.name);
+      }
       enrichedCount++;
     }
 
     // Handle not-found cards with fuzzy fallback
-    const notFoundInBatch = batch.filter(([name]) => !foundNames.has(name));
+    const notFoundInBatch = batch.filter(([name]) => !foundDetectedNames.has(name));
     for (const [name, quantity] of notFoundInBatch) {
       await sleep(RATE_LIMIT_MS);
 
@@ -340,9 +346,11 @@ async function main(): Promise<void> {
 
   console.error(`Found ${rawData.metadata.highConfidenceCards} unique cards to enrich`);
 
-  // Carry forward string warnings from scan
-  const warnings: string[] = rawData.warnings
-    .filter((w): w is string => typeof w === "string");
+  // Carry forward all warnings from scan — convert DetectedCard warnings to descriptive strings
+  const warnings: string[] = rawData.warnings.map((w) => {
+    if (typeof w === "string") return w;
+    return `Uncertain card: ${w.name} (qty ${w.quantity}, confidence: ${w.confidence}, photo: ${w.sourcePhoto})`;
+  });
 
   // Enrich with Scryfall
   const { cards, enrichedCount, notFoundCount } = await enrichCards(rawData.cards, warnings);
@@ -369,14 +377,16 @@ async function main(): Promise<void> {
 
   // Optional merge
   if (shouldMerge) {
-    const collectionPath = resolve("collection.json");
+    // Resolve collection.json relative to the output path's directory (typically project root)
+    const outputDir = resolve(outputPath, "..");
+    const collectionPath = resolve(outputDir, "collection.json");
     if (!existsSync(collectionPath)) {
       console.error(`\nNo collection.json found at ${collectionPath} — skipping merge.`);
       return;
     }
 
     // Backup
-    const backupPath = resolve("collection.json.bak");
+    const backupPath = resolve(outputDir, "collection.json.bak");
     copyFileSync(collectionPath, backupPath);
     console.error(`Backed up collection.json to collection.json.bak`);
 
