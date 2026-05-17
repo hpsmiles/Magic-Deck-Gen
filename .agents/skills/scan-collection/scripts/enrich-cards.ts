@@ -181,6 +181,7 @@ function mapScryfallCard(apiCard: ScryfallApiCard, name: string, quantity: numbe
     producedMana: apiCard.produced_mana,
     edhrecRank: apiCard.edhrec_rank,
     setName: apiCard.set_name,
+    collectorNumber: apiCard.collector_number,
   };
 }
 
@@ -209,10 +210,11 @@ async function enrichCards(
   let enrichedCount = 0;
   let notFoundCount = 0;
 
-  // Build lookup from name → quantity
+  // Build lookup from name → quantity (sum duplicates from different photos)
   const nameToQuantity = new Map<string, number>();
   for (const card of detectedCards) {
-    nameToQuantity.set(card.name, card.quantity);
+    const existing = nameToQuantity.get(card.name) ?? 0;
+    nameToQuantity.set(card.name, existing + card.quantity);
   }
 
   const entries = Array.from(nameToQuantity.entries());
@@ -255,7 +257,7 @@ async function enrichCards(
 
       const fuzzyResult = await fetchNamed(name);
       if (fuzzyResult) {
-        result.push(mapScryfallCard(fuzzyResult, name, quantity));
+        result.push(mapScryfallCard(fuzzyResult, fuzzyResult.name, quantity));
         enrichedCount++;
       } else {
         warnings.push(`Card not found on Scryfall: "${name}"`);
