@@ -131,6 +131,7 @@ async function scryfallRequest<T>(path: string, options?: RequestInit): Promise<
     ...options,
     headers: {
       "Content-Type": "application/json",
+      "Accept": "application/json",
       "User-Agent": "MagicDeckGen/1.0",
       ...(options?.headers || {}),
     },
@@ -242,11 +243,10 @@ async function enrichCards(
   // Process in batches of 75
   for (let i = 0; i < entries.length; i += BATCH_SIZE) {
     const batch = entries.slice(i, i + BATCH_SIZE);
-    const identifiers: ScryfallIdentifier[] = batch.map(([name, info]) => {
-      const id: ScryfallIdentifier = { name };
-      if (info.setName) id.set = info.setName;
-      if (info.collectorNumber) id.collector_number = info.collectorNumber;
-      return id;
+    const identifiers: ScryfallIdentifier[] = batch.map(([name, _info]) => {
+      // Use name-only lookup — the vision model's setName/collectorNumber
+      // are unreliable and cause Scryfall batch lookups to fail
+      return { name };
     });
 
     if (i > 0) {
