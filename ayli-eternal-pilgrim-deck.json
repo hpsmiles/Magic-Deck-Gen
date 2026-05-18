@@ -1,0 +1,502 @@
+{
+  "metadata": {
+    "format": "commander",
+    "strategy": "Life gain + sacrifice - gain life to activate Ayli exile, drain with Blood Artist/Vito",
+    "commander": "Ayli, Eternal Pilgrim",
+    "colors": [
+      "B",
+      "W"
+    ],
+    "createdAt": "2026-05-18T00:00:00Z"
+  },
+  "mainboard": [
+    {
+      "name": "Ayli, Eternal Pilgrim",
+      "quantity": 1,
+      "category": "commander",
+      "scryfallId": "06969031-2c13-4b5a-bb4e-86eed025e614"
+    },
+    {
+      "name": "Ajani's Pridemate",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "222c1a68-e34c-4103-b1be-17d4ceaef6ce"
+    },
+    {
+      "name": "Sun-Blessed Healer",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "323d029e-9a88-4188-b3a4-38ef32cffc9f"
+    },
+    {
+      "name": "Angel of Vitality",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "c279947e-168f-4af5-902b-aba724f52b8a"
+    },
+    {
+      "name": "Linden, the Steadfast Queen",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "e0bb07cd-9b74-4ba7-8089-27a565d74197"
+    },
+    {
+      "name": "Vito, Thorn of the Dusk Rose",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "0fe79ee4-c3f3-4a6b-a967-203ca3b70ee5"
+    },
+    {
+      "name": "Marauding Blight-Priest",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "5f70dafc-c638-4ec0-ab5b-62998f752720"
+    },
+    {
+      "name": "Vampire Nighthawk",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "7aff07f9-9528-4149-9af0-f4e3c66c9dc5"
+    },
+    {
+      "name": "Child of Night",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "3887af00-a87d-4396-b82b-38b88c084e8e"
+    },
+    {
+      "name": "Exsanguinate",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "f11d7311-4066-4a5d-ba28-9857fa707a0b"
+    },
+    {
+      "name": "Basilisk Collar",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "7b36fba7-71f7-4b7f-bde5-b3a9752ad21c"
+    },
+    {
+      "name": "Whispersilk Cloak",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "5a12bfaf-7481-4e6a-98c8-6308d075382b"
+    },
+    {
+      "name": "Defile",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "5bcb4398-edd1-41a7-a496-b12bce22ceb6"
+    },
+    {
+      "name": "Blood Artist",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "b5275d76-2947-4219-be21-614c7421614a"
+    },
+    {
+      "name": "Zulaport Cutthroat",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "c43609fb-3cee-44e0-98d0-3ecaba1d5767"
+    },
+    {
+      "name": "Viscera Seer",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "f511830b-1c1f-4d30-aa5d-4314726d142e"
+    },
+    {
+      "name": "Vampiric Rites",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "9ae0b1e0-a481-4a98-b67b-0cf8bac53fdd"
+    },
+    {
+      "name": "Skullclamp",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "b5bb89dd-9d31-49d9-ba54-4a04798e515e"
+    },
+    {
+      "name": "Village Rites",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "42ed35e9-51cd-468a-86a9-9412553cf50d"
+    },
+    {
+      "name": "Corrupted Conviction",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "8046f892-3317-4ef7-9cf7-97b9060540c8"
+    },
+    {
+      "name": "Deadly Dispute",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "b22ef77b-67a3-45d3-9d18-12b7b124cbf4"
+    },
+    {
+      "name": "Path to Exile",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "90b690f4-9647-4e67-b7cb-b2692ea149b1"
+    },
+    {
+      "name": "Anguished Unmaking",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "407183c6-c962-4f8c-867e-abc309b6c573"
+    },
+    {
+      "name": "Mortify",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "88e85619-3a7d-48c2-b9b0-20718c913696"
+    },
+    {
+      "name": "Hero's Downfall",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "ad2c01d9-8f54-46c0-9dc9-d4d4764ce1c9"
+    },
+    {
+      "name": "Murder",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "2c249609-9cf7-46f1-b94c-9329add966bb"
+    },
+    {
+      "name": "Doom Blade",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "90699423-2556-40f7-b8f5-c9d82f22d52e"
+    },
+    {
+      "name": "Grasp of Darkness",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "7737b578-8ae3-4846-b508-93ef40f25244"
+    },
+    {
+      "name": "Wrath of God",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "537d2b05-3f52-45d6-8fe3-26282085d0c6"
+    },
+    {
+      "name": "Massacre Wurm",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "670a36cc-34e1-4d11-808e-1b6bc88eb5d8"
+    },
+    {
+      "name": "Feed the Swarm",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "a776f96b-01bf-430a-b1ad-9f4651070610"
+    },
+    {
+      "name": "Phyrexian Arena",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "0784b6f0-9ebf-43d2-ba0f-a6bc93ba0c48"
+    },
+    {
+      "name": "Sign in Blood",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "b89d9372-8682-4a61-a003-8bccfbb6cbb4"
+    },
+    {
+      "name": "Mentor of the Meek",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "280ca0f4-be07-452a-bbc0-c25570f14008"
+    },
+    {
+      "name": "Inspiring Overseer",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "79016cf3-6eea-4b21-9ff3-f187d606e19a"
+    },
+    {
+      "name": "Mazemind Tome",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "f45072cd-e3f2-4090-b984-50ec8d360bf2"
+    },
+    {
+      "name": "Midnight Reaper",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "f229b0e6-1ffd-410e-b04b-a0afc179c58c"
+    },
+    {
+      "name": "Macabre Waltz",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "4d1f3c84-89ba-4426-a80b-d524f172c912"
+    },
+    {
+      "name": "Sol Ring",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "870ec754-a76c-40ea-9b81-81b3dca1f62c"
+    },
+    {
+      "name": "Arcane Signet",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "7811dd72-61b9-4067-ac20-cea153e625d2"
+    },
+    {
+      "name": "Mind Stone",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "ad881aa0-decc-447b-8c8a-983546a9a55a"
+    },
+    {
+      "name": "Burnished Hart",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "65ebbff0-fbe6-4310-a33f-e00bb2534979"
+    },
+    {
+      "name": "Hedron Archive",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "535b9ac6-dba2-4162-86ed-df3e9fad0306"
+    },
+    {
+      "name": "Gilded Lotus",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "aa5e88f1-0ddf-45d7-bbd0-baa88d121867"
+    },
+    {
+      "name": "Swiftfoot Boots",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "1969b151-3192-4d35-80ca-c4e180601ec8"
+    },
+    {
+      "name": "Solemn Simulacrum",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "29fae212-b757-4e5f-ad9b-06cd09782f9f"
+    },
+    {
+      "name": "Sun Titan",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "3d6eacf2-f6c7-4ede-b5a5-7463602699ae"
+    },
+    {
+      "name": "Cadaver Imp",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "f06ab823-9591-460d-a896-3073d9843df0"
+    },
+    {
+      "name": "Sevinne's Reclamation",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "8deab1ef-4219-4767-a3c4-b61250d0ebe0"
+    },
+    {
+      "name": "Kambal, Profiteering Mayor",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "d53a775d-5898-41a8-b404-9b7d4721c6ba"
+    },
+    {
+      "name": "Lurrus of the Dream-Den",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "5ad36fb2-c44e-4085-ba0d-54277841ad3a"
+    },
+    {
+      "name": "Undying Malice",
+      "quantity": 1,
+      "category": "instant",
+      "scryfallId": "97b3cf11-e352-4ee1-8c03-13898f576ef9"
+    },
+    {
+      "name": "Felidar Retreat",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "89e3cc09-5057-4c05-88fc-d6cda809fc74"
+    },
+    {
+      "name": "Stroke of Midnight",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "b000f605-177f-459d-a197-fcf54efec2fb"
+    },
+    {
+      "name": "Diabolic Tutor",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "d650dd8c-edd8-44e4-ae95-aaaf84557a72"
+    },
+    {
+      "name": "Braids, Arisen Nightmare",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "f96223d0-04c4-40c2-87a9-0c6bc74adddb"
+    },
+    {
+      "name": "Expedition Map",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "08e66835-c228-48fa-bcaa-eb96edbd4f5a"
+    },
+    {
+      "name": "Soul-Guide Lantern",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "f4907e7b-d6d5-4e9b-968f-bce34ae4a577"
+    },
+    {
+      "name": "Disenchant",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "7ac43e16-8b14-46f2-877a-600ea918766b"
+    },
+    {
+      "name": "Duress",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "34c3a894-ee75-4db9-a69f-711bb3cc150a"
+    },
+    {
+      "name": "Kalastria Highborn",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "a3a055ed-60b0-4d35-ad58-04f324b56d65"
+    },
+    {
+      "name": "Plains",
+      "quantity": 11,
+      "category": "land",
+      "scryfallId": "24dc369c-020a-4115-a4bb-d60a44de64e3"
+    },
+    {
+      "name": "Swamp",
+      "quantity": 10,
+      "category": "land",
+      "scryfallId": "c5f590a3-9993-4ac4-a93c-1beb44eda17b"
+    },
+    {
+      "name": "Scoured Barrens",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "b4b47b80-69ed-44b0-afa0-ca90206dc16d"
+    },
+    {
+      "name": "Temple of Silence",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "f7d3770f-cde6-4e29-8cbf-fe841634a5d7"
+    },
+    {
+      "name": "Orzhov Guildgate",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "a917be03-0c17-4454-b044-c4375e5c8085"
+    },
+    {
+      "name": "Command Tower",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "c46a217c-0ed2-4b3c-9a01-ee38d12d76f3"
+    },
+    {
+      "name": "Evolving Wilds",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "a30f5555-2fbe-4c88-9e4f-1f2e81ea6cfd"
+    },
+    {
+      "name": "Terramorphic Expanse",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "9a4c5629-fadd-42b9-850f-9f8586a2ca50"
+    },
+    {
+      "name": "Crawling Barrens",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "ac2aff0e-1319-4d3b-903c-fa1ce3db7602"
+    },
+    {
+      "name": "Rogue's Passage",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "335444f0-0848-4c17-b056-56d4fc876a58"
+    },
+    {
+      "name": "Scavenger Grounds",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "707d733d-2928-4215-91d2-1340fc9ee903"
+    },
+    {
+      "name": "Cryptic Caves",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "9d126c8f-a3df-497c-aad5-a448c55f51cc"
+    },
+    {
+      "name": "Shefet Dunes",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "c9b0a526-73b0-4501-80a3-f16dbef9cdfd"
+    },
+    {
+      "name": "Desert of the True",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "8d8c5284-7f56-46e5-8226-1e5cedf2aeb9"
+    },
+    {
+      "name": "Krosan Verge",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "19fc5bec-f877-430c-8e83-e6c5fe97f3c4"
+    },
+    {
+      "name": "Demolition Field",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "0c7e51b6-4898-4632-b39c-3ce438caa882"
+    },
+    {
+      "name": "Endless Sands",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "f436df63-41b9-416d-8e41-035261d4d0cc"
+    },
+    {
+      "name": "Dunes of the Dead",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "cd86b0af-9c26-4c3a-8e1e-74a28263bd83"
+    },
+    {
+      "name": "Hostile Desert",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "d71031c2-7379-4d83-b6d6-61f3104593c4"
+    },
+    {
+      "name": "Bucolic Ranch",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "6c4f6b81-53d0-49fb-b404-c2ad67de7493"
+    }
+  ],
+  "maybeboard": [],
+  "reservedDecks": []
+}

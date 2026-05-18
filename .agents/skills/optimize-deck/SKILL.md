@@ -25,19 +25,28 @@ Iteratively improve a deck based on validation results and strategic analysis. M
 
 3. **Strategic improvement loop** (max 10 iterations):
    For each iteration:
-   a. Analyze the deck's strengths and weaknesses:
+   a. **Strategy-synergy audit**: Score each non-land card against the deck's stated strategy (from deck.json metadata.strategy). Flag cards as:
+      - **Core**: Directly enables or benefits from the strategy (e.g., landfall payoffs in a landfall deck)
+      - **Support**: Provides enabling infrastructure (ramp, removal, draw) that the strategy needs
+      - **Off-strategy**: Does not meaningfully interact with the strategy (e.g., a token generator that makes the wrong creature type, a looting spell in a deck that doesn't care about the graveyard)
+      - **Anti-synergy**: Actively works against the strategy (e.g., a card that punishes playing lands in a landfall deck)
+   b. **Find upgrades for off-strategy cards**: Search the collection for cards in the same color identity that ARE core or support for the strategy. Prioritize:
+      - Cards that directly trigger or benefit from the deck's mechanic (e.g., landfall triggers in a landfall deck, sacrifice outlets in a sacrifice deck)
+      - Cards referenced by EDHREC as staples for the commander or archetype
+      - Cards with lower CMC than the card being replaced (improves mana curve)
+      - Cards that serve multiple roles (e.g., a creature that's both ramp and a landfall trigger)
+   c. **Check structural needs**: After synergy swaps, verify:
       - Mana curve balance (too top-heavy? too many low-impact 1-drops?)
-      - Synergy gaps (cards that don't support the strategy)
       - Missing key effects (enough ramp? enough removal? enough draw?)
       - Color balance (too many cards in one color?)
-   b. Identify 1-3 specific changes (swaps, additions, removals)
-   c. Log the iteration:
+   d. Identify 1-3 specific changes (swaps, additions, removals)
+   e. Log the iteration:
       ```bash
       cd .agents/skills/optimize-deck/scripts && npx tsx log-iteration.ts '<iteration-json>' <log-path>
       ```
-   d. Update deck.json with the changes
-   e. Re-validate (run `validate-deck` skill)
-   f. If valid and no more improvements needed, stop
+   f. Update deck.json with the changes
+   g. Re-validate (run `validate-deck` skill)
+   h. If valid and no more improvements needed, stop
 
 4. **Mark optimization complete**:
    ```bash
@@ -49,12 +58,26 @@ Iteratively improve a deck based on validation results and strategic analysis. M
 ## Improvement Priorities
 
 1. **Fix validation errors** (must do)
-2. **Add missing ramp** (if <8 ramp sources for Commander)
-3. **Add missing card draw** (if <8 draw sources for Commander)
-4. **Add missing removal** (if <6 removal spells for Commander)
-5. **Improve mana curve** (aim for bell curve peaking at 2-3 CMC)
-6. **Improve synergy** (replace cards that don't support the strategy)
-7. **Improve land count** (Commander: 36-38 lands typically)
+2. **Replace off-strategy cards** (cards that don't support the deck's stated strategy — highest impact improvements)
+3. **Add missing ramp** (if <8 ramp sources for Commander)
+4. **Add missing card draw** (if <8 draw sources for Commander)
+5. **Add missing removal** (if <6 removal spells for Commander)
+6. **Improve mana curve** (aim for bell curve peaking at 2-3 CMC)
+7. **Improve synergy** (replace support cards with ones that also advance the strategy)
+8. **Improve land count** (Commander: 36-38 lands typically)
+
+## Strategy-Synergy Examples
+
+These illustrate how to identify off-strategy cards and find better replacements:
+
+| Deck Strategy | Off-Strategy Card | Why It's Off-Strategy | Better Replacement |
+|---------------|-------------------|----------------------|-------------------|
+| Landfall (Omnath) | Dragonmaster Outcast | Makes dragons, not elementals; no landfall interaction | Green Sun's Zenith (tutors for landfall creatures) |
+| Landfall (Omnath) | Bitter Reunion | Generic looting; doesn't interact with lands | Elvish Reclaimer (sacrifices a land to find another = landfall trigger) |
+| Sacrifice (Ayli) | Random vanilla beater | No death trigger, no life gain, no sacrifice value | Creature with "when this dies" or "when you gain life" effect |
+| Tokens (Ghired) | Non-token creature | Doesn't create or buff tokens | Token generator or populate spell |
+
+The key question for each card: **"Does this card get better because of my strategy, or does my strategy get better because of this card?"** If neither, it's off-strategy.
 
 ## Key Constraints
 

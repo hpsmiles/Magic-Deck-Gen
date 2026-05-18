@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "deckFile": "C:\\aaa\\code\\Magic-Deck-Gen\\ayli-eternal-pilgrim-deck.json",
+    "collectionFile": "C:\\aaa\\code\\Magic-Deck-Gen\\photo-collection.json",
+    "format": "commander",
+    "validatedAt": "2026-05-18T03:03:05.660Z"
+  },
+  "valid": true,
+  "errors": [],
+  "warnings": [],
+  "manaCurve": {
+    "0": 39,
+    "1": 13,
+    "2": 19,
+    "3": 21,
+    "4": 5,
+    "5": 1,
+    "6+": 2
+  },
+  "summary": {
+    "totalCards": 100,
+    "uniqueCards": 81,
+    "formatLegal": true,
+    "availableInCollection": true
+  }
+}

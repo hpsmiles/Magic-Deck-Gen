@@ -1,0 +1,496 @@
+{
+  "metadata": {
+    "format": "commander",
+    "strategy": "Landfall elementals - ramp into big landfall triggers, sacrifice elementals for Omnath damage",
+    "commander": "Omnath, Locus of Rage",
+    "colors": [
+      "G",
+      "R"
+    ],
+    "createdAt": "2026-05-18T00:00:00Z"
+  },
+  "mainboard": [
+    {
+      "name": "Omnath, Locus of Rage",
+      "quantity": 1,
+      "category": "commander",
+      "scryfallId": "637c5910-f835-496e-b1b9-445bfb71da97"
+    },
+    {
+      "name": "Llanowar Elves",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "6a0b230b-d391-4998-a3f7-7b158a0ec2cd"
+    },
+    {
+      "name": "Sol Ring",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "870ec754-a76c-40ea-9b81-81b3dca1f62c"
+    },
+    {
+      "name": "Arcane Signet",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "7811dd72-61b9-4067-ac20-cea153e625d2"
+    },
+    {
+      "name": "Lotus Cobra",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "a4b759f0-901f-4be3-93fa-224609b08d48"
+    },
+    {
+      "name": "Bloom Tender",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "ba86688d-18f0-4b5c-a797-42bf125a6c9f"
+    },
+    {
+      "name": "Explore",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "3976affd-8c2b-499a-a946-b629c2ba59c7"
+    },
+    {
+      "name": "Rampant Growth",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "b7c47024-5e08-4b17-b41a-7647f8b814b9"
+    },
+    {
+      "name": "Burnished Hart",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "65ebbff0-fbe6-4310-a33f-e00bb2534979"
+    },
+    {
+      "name": "Elvish Reclaimer",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "39c431d7-d94b-46c4-bb89-f3db56214ab4"
+    },
+    {
+      "name": "Gilded Lotus",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "aa5e88f1-0ddf-45d7-bbd0-baa88d121867"
+    },
+    {
+      "name": "Swiftfoot Boots",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "1969b151-3192-4d35-80ca-c4e180601ec8"
+    },
+    {
+      "name": "Harrow",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "3e76be46-cf81-4fef-bc5b-f87666cb0413"
+    },
+    {
+      "name": "Springbloom Druid",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "17d67b88-3f76-401f-b04a-f2bcaab4aa97"
+    },
+    {
+      "name": "Circuitous Route",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "a806dec2-d4f9-4f8d-a1dd-170777941131"
+    },
+    {
+      "name": "World Shaper",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "cc765da4-4bca-4250-80e4-05575d6fa98c"
+    },
+    {
+      "name": "Nesting Dragon",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "626db678-2dec-4026-af5a-83e834692ba0"
+    },
+    {
+      "name": "Azusa, Lost but Seeking",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "2fe97fbe-a6d6-4e96-8c26-f81bcdf579a1"
+    },
+    {
+      "name": "Oracle of Mul Daya",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "ab19808f-a5b8-4dfd-800e-2064cd6538c8"
+    },
+    {
+      "name": "Mina and Denn, Wildborn",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "374b5d57-fd20-4062-9ec2-24ac557d9dde"
+    },
+    {
+      "name": "Ramunap Excavator",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "3f8a0a0e-81f7-40a2-b393-bdc1423549f6"
+    },
+    {
+      "name": "Crop Rotation",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "523414cb-f8db-407a-808a-01454e03d8b9"
+    },
+    {
+      "name": "Expedition Map",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "08e66835-c228-48fa-bcaa-eb96edbd4f5a"
+    },
+    {
+      "name": "Scute Swarm",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "ea630ba1-22f9-4a10-bdc6-0d03128214f4"
+    },
+    {
+      "name": "Rampaging Baloths",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "84aa18de-6acc-46cc-8e28-3046790a6751"
+    },
+    {
+      "name": "Avenger of Zendikar",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "c6f1e60f-a195-4590-80b0-86767de6c423"
+    },
+    {
+      "name": "Ancient Greenwarden",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "12a0bf5c-a165-48f1-9a57-3a7cc9f3b0f9"
+    },
+    {
+      "name": "Titania, Protector of Argoth",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "732c208b-cd9e-48a9-9b9d-aba63066ba53"
+    },
+    {
+      "name": "Patient Naturalist",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "1dd17cea-9e8c-4dba-b6ab-a6b9de87a306"
+    },
+    {
+      "name": "Impact Tremors",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "d0b7cecf-b51b-4d30-b7e9-cd7976271e07"
+    },
+    {
+      "name": "Shigeki, Jukai Visionary",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "ed8ea0da-c9d4-4158-aaa7-ebe2fe2b1e15"
+    },
+    {
+      "name": "Viridian Emissary",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "e488ed05-d63a-4852-b5e9-d7357c60c3e6"
+    },
+    {
+      "name": "Wayward Swordtooth",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "95a5d742-187a-4eba-82e4-7a4cc5c4e6f3"
+    },
+    {
+      "name": "Hour of Promise",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "6a40ae96-60a7-465f-b6d9-87e1e952dcf0"
+    },
+    {
+      "name": "Dance of the Tumbleweeds",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "caf0e715-befb-4904-82e6-d3f8c7fbd454"
+    },
+    {
+      "name": "Nahiri's Lithoforming",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "06bb4bc1-6ef9-4015-9f5f-36f51dbac87e"
+    },
+    {
+      "name": "Green Sun's Zenith",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "70291c7b-a86f-4466-8502-c28765a89b2a"
+    },
+    {
+      "name": "Solemn Simulacrum",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "29fae212-b757-4e5f-ad9b-06cd09782f9f"
+    },
+    {
+      "name": "Mind Stone",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "ad881aa0-decc-447b-8c8a-983546a9a55a"
+    },
+    {
+      "name": "Scaretiller",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "23eb0fce-2e69-4280-8ee3-85736765fbbd"
+    },
+    {
+      "name": "Tireless Tracker",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "66444549-ad9b-49c6-a7c6-34e977c1085d"
+    },
+    {
+      "name": "Return of the Wildspeaker",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "2fa1dac5-51ba-403e-b48b-d2c0d23a8146"
+    },
+    {
+      "name": "Garruk's Uprising",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "b58c4033-f764-42f6-966f-b7202a2babbf"
+    },
+    {
+      "name": "Thrill of Possibility",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "882b348c-076b-41d8-b505-063480636669"
+    },
+    {
+      "name": "Life from the Loam",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "cdb6432f-3f56-4c92-b09a-2a5b64620c04"
+    },
+    {
+      "name": "Winding Way",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "d3340062-3071-4d8e-98f8-fd3343a011ad"
+    },
+    {
+      "name": "Dragon Fodder",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "f9abe517-f601-4784-8d62-2350bd755146"
+    },
+    {
+      "name": "Crawling Sensation",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "6d60bde4-5418-483f-9a75-17cf61927749"
+    },
+    {
+      "name": "Escape to the Wilds",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "889cdc42-fae3-4dda-9cf0-697730ef00e3"
+    },
+    {
+      "name": "Bala Ged Recovery // Bala Ged Sanctuary",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "c5cb3052-358d-44a7-8cfd-cd31b236494a"
+    },
+    {
+      "name": "Decimate",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "cf0e68bc-8de8-4ff8-a39a-8da95f71d843"
+    },
+    {
+      "name": "Abrade",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "1add1757-c1f8-448a-b279-c6940fb7ad5f"
+    },
+    {
+      "name": "Bite Down",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "f8d70b3b-f6f9-4b3c-ad70-0ce369e812b5"
+    },
+    {
+      "name": "Reclamation Sage",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "1918ea65-ab7f-4d40-97fd-a656c892a2a1"
+    },
+    {
+      "name": "Wreck and Rebuild",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "a177ba01-53cd-4223-8f79-9fbeb2b86906"
+    },
+    {
+      "name": "Nevinyrral's Disk",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "36fb6ee3-bd54-4e5b-b055-c2c42515c162"
+    },
+    {
+      "name": "Meteor Golem",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "d291ea1e-36bc-46b3-b3ae-084fa0ba69eb"
+    },
+    {
+      "name": "Goblin Bombardment",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "e262f55e-9239-4a97-a19e-9b08fb34502e"
+    },
+    {
+      "name": "Soul-Guide Lantern",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "f4907e7b-d6d5-4e9b-968f-bce34ae4a577"
+    },
+    {
+      "name": "Skullclamp",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "b5bb89dd-9d31-49d9-ba54-4a04798e515e"
+    },
+    {
+      "name": "Krenko, Tin Street Kingpin",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "2f5689e2-d8a2-442b-8027-f89686adcb67"
+    },
+    {
+      "name": "Basilisk Collar",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "7b36fba7-71f7-4b7f-bde5-b3a9752ad21c"
+    },
+    {
+      "name": "Forest",
+      "quantity": 12,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Mountain",
+      "quantity": 10,
+      "category": "land",
+      "scryfallId": "51acfb01-4b0b-48fc-9704-a9b4a1e43a23"
+    },
+    {
+      "name": "Sheltered Thicket",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "ad7f87dd-1c43-4b6f-9d68-cc09ef76dbc2"
+    },
+    {
+      "name": "Rugged Highlands",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "31261eca-28ad-407c-84ef-0c124d0d7451"
+    },
+    {
+      "name": "Bristling Backwoods",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "d61dfeb7-7f6b-4601-8396-2cbb98165489"
+    },
+    {
+      "name": "Temple of Abandon",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "d2ce0759-6b24-41a6-8a24-16cf44dfc162"
+    },
+    {
+      "name": "Gruul Guildgate",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "3ab6c240-c97d-4a5c-bc39-860c2d9901c2"
+    },
+    {
+      "name": "Command Tower",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "c46a217c-0ed2-4b3c-9a01-ee38d12d76f3"
+    },
+    {
+      "name": "Evolving Wilds",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "a30f5555-2fbe-4c88-9e4f-1f2e81ea6cfd"
+    },
+    {
+      "name": "Terramorphic Expanse",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "9a4c5629-fadd-42b9-850f-9f8586a2ca50"
+    },
+    {
+      "name": "Crawling Barrens",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "ac2aff0e-1319-4d3b-903c-fa1ce3db7602"
+    },
+    {
+      "name": "Rogue's Passage",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "335444f0-0848-4c17-b056-56d4fc876a58"
+    },
+    {
+      "name": "Scavenger Grounds",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "707d733d-2928-4215-91d2-1340fc9ee903"
+    },
+    {
+      "name": "Ramunap Ruins",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "727beb1f-1445-4398-970c-e31819d54bc6"
+    },
+    {
+      "name": "Hashep Oasis",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "d18d5af2-ca2c-4a3a-9b67-e953b24b0718"
+    },
+    {
+      "name": "Conduit Pylons",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5ffa48cc-b991-4d47-b7ec-cf678915c758"
+    },
+    {
+      "name": "Dunes of the Dead",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "cd86b0af-9c26-4c3a-8e1e-74a28263bd83"
+    },
+    {
+      "name": "Demolition Field",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "0c7e51b6-4898-4632-b39c-3ce438caa882"
+    }
+  ],
+  "maybeboard": [],
+  "reservedDecks": []
+}
