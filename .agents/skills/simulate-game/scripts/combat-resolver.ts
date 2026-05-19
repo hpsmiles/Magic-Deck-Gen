@@ -123,6 +123,12 @@ function dealDamage(
       if (assignment.target.type === 'player') {
         const targetPlayerIndex = parseInt(assignment.target.id, 10);
 
+        // Validate target player index
+        if (isNaN(targetPlayerIndex) || targetPlayerIndex < 0 || targetPlayerIndex >= currentState.players.length) {
+          console.warn(`Invalid target player index ${targetPlayerIndex} from target.id "${assignment.target.id}" — skipping damage`);
+          continue;
+        }
+
         // Reduce player life
         currentState = {
           ...currentState,

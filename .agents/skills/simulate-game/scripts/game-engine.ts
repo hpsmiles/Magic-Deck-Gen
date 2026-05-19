@@ -76,7 +76,10 @@ export async function runGame(decks: DeckInput[]): Promise<GameResult> {
 
   // 3. Main game loop
   while (!state.gameOver && state.turn <= MAX_TURNS) {
-    console.log(`  Turn ${state.turn}: Player ${state.activePlayerIndex} (${decks[state.activePlayerIndex].name})`);
+    const lifeStr = state.players.map((p) => p.life).join(',');
+    const landStr = state.players.map((_, i) => getPermanentsControlledBy(state, i).filter((p) => isLand(p)).length).join(',');
+    const handStr = state.players.map((p) => p.hand.length).join(',');
+    console.log(`  Turn ${state.turn}: P${state.activePlayerIndex} (${decks[state.activePlayerIndex].name}) — Life:[${lifeStr}] Lands:[${landStr}] Hand:[${handStr}]`);
     state = await runTurn(state, decks);
   }
 
@@ -392,6 +395,18 @@ async function runMainPhase(
 
     const response = await getAgentDecision(request);
 
+    // Log LLM decision for debugging
+    console.log(`    [LLM P${activePlayer} ${currentState.step}] ${response.reasoning.slice(0, 120)}`);
+    const actionSummary = response.actions.map((a: GameAction) =>
+      a.type === 'cast' ? `cast(${a.cardId})` :
+      a.type === 'play_land' ? `land(${a.cardId})` :
+      a.type === 'activate' ? `tap(${a.permanentId})` :
+      a.type === 'attack' ? `attack(${Object.keys(a.attackers ?? {}).length} creatures)` :
+      a.type === 'block' ? `block(${Object.keys(a.blockers ?? {}).length} creatures)` :
+      a.type
+    ).join(', ');
+    console.log(`    [LLM Actions] ${actionSummary}`);
+
     // Process each action from the LLM response
     let allActionsInvalid = true;
 
@@ -507,6 +522,14 @@ async function runCombatPhase(
 
     const response = await getAgentDecision(request);
 
+    // Log combat decision
+    console.log(`    [COMBAT P${activePlayer}] ${response.reasoning.slice(0, 120)}`);
+    const combatActions = response.actions.map((a: GameAction) =>
+      a.type === 'attack' ? `attack(${Object.keys(a.attackers ?? {}).length} -> ${JSON.stringify(a.attackers)})` :
+      a.type === 'pass' ? 'pass' : a.type
+    ).join(', ');
+    console.log(`    [COMBAT Actions] ${combatActions}`);
+
     for (const action of response.actions) {
       if (action.type === 'attack' && action.attackers) {
         const validation = validateAction(currentState, action);
@@ -596,7 +619,9 @@ async function runCombatPhase(
       for (const action of response.actions) {
         if (action.type === 'block' && action.blockers) {
           for (const [blockerId, attackerIds] of Object.entries(action.blockers)) {
-            for (const attackerId of attackerIds) {
+            // Handle both array format ["attackerId"] and single string "attackerId"
+            const ids = Array.isArray(attackerIds) ? attackerIds : [attackerIds];
+            for (const attackerId of ids) {
               allBlocks.push({ blockerId, attackerId });
             }
           }

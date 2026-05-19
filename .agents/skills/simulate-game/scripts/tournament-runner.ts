@@ -54,7 +54,9 @@ export async function runTournament(
       result = await runGame(shuffledDecks);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
+      const stack = err instanceof Error ? err.stack : '';
       console.error(`Game ${gameNum} failed: ${msg}`);
+      if (stack) console.error(stack);
       // Record as a draw/timeout — no winner
       result = {
         gameId: `error-game-${gameNum}`,
