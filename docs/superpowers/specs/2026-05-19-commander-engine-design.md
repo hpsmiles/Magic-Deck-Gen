@@ -98,6 +98,60 @@ interface StackItem {
 
 type GamePhase = 'beginning' | 'precombat_main' | 'combat' | 'postcombat_main' | 'ending';
 type GameStep = 'untap' | 'upkeep' | 'draw' | 'main_precombat' | 'begin_combat' | 'declare_attackers' | 'declare_blockers' | 'combat_damage' | 'end_combat' | 'main_postcombat' | 'end_step' | 'cleanup';
+
+interface ManaPool {
+  white: number;
+  blue: number;
+  black: number;
+  red: number;
+  green: number;
+  colorless: number;
+}
+
+interface ManaCost {
+  white: number;
+  blue: number;
+  black: number;
+  red: number;
+  green: number;
+  colorless: number;
+  x: boolean;
+}
+
+interface CardData {
+  name: string;
+  scryfallId: string;
+  manaCost: ManaCost;
+  typeLine: string;
+  oracleText: string;
+  power: number | null;
+  toughness: number | null;
+  loyalty: number | null;
+  colorIdentity: string[];
+  keywords: string[];
+}
+
+interface CardInstance {
+  id: string; // unique instance UUID
+  card: CardData;
+  owner: number; // player index
+  zone: 'hand' | 'library' | 'graveyard' | 'exile' | 'battlefield' | 'command' | 'stack';
+}
+
+interface Target {
+  type: 'player' | 'permanent' | 'stackItem';
+  id: string; // player index or permanent/stack item UUID
+}
+
+interface GameLogEntry {
+  turn: number;
+  player: number;
+  phase: GameStep;
+  action: string;
+  card?: string;
+  details: string;
+  timestamp: number;
+}
 ```
 
 ### Key Design Decisions
@@ -304,5 +358,6 @@ npx tsx simulate.ts \
 - Scripts run via: `cd .agents/skills/simulate-game/scripts && npx tsx <script>.ts <args>`
 - TypeScript: ES2022, Node16 module resolution
 - Scryfall rate limit: 550ms between requests
-- LLM provider configured via `LLM_PROVIDER` env var (`openai` | `anthropic`)
-- LLM model configured via `LLM_MODEL` env var
+- LLM provider configured via `LLM_PROVIDER` env var (`openai` | `anthropic`, default: `openai`)
+- LLM model configured via `LLM_MODEL` env var (default: `gpt-4o` for OpenAI, `claude-sonnet-4-20250514` for Anthropic)
+- API key via `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` env var (required)
