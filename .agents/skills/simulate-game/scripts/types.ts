@@ -253,4 +253,5 @@ export interface ArchidektCard {
   };
   quantity: number;
   category: string;
+  categories: string[];
 }

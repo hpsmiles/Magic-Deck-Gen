@@ -76,6 +76,7 @@ export async function runGame(decks: DeckInput[]): Promise<GameResult> {
 
   // 3. Main game loop
   while (!state.gameOver && state.turn <= MAX_TURNS) {
+    console.log(`  Turn ${state.turn}: Player ${state.activePlayerIndex} (${decks[state.activePlayerIndex].name})`);
     state = await runTurn(state, decks);
   }
 

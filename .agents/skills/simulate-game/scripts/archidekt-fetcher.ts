@@ -94,19 +94,32 @@ export async function fetchDeckFromArchidekt(url: string): Promise<DeckInput> {
   const deck = await fetchArchidektDeck(deckId);
 
   // Find the commander card
+  // Archidekt uses "categories" (plural, array) — check both for compatibility
   const commanderEntry = deck.cards.find(
-    (c) => c.category === 'commander' || c.category === 'commanders'
+    (c) => c.categories?.some((cat) => cat.toLowerCase() === 'commander')
+      || c.category?.toLowerCase() === 'commander'
+      || c.category?.toLowerCase() === 'commanders'
   );
   if (!commanderEntry) {
     throw new Error(`No commander found in Archidekt deck ${deckId}`);
   }
   const commanderName = commanderEntry.card.oracleCard.name;
 
+  // Filter out sideboard and maybeboard cards — only include mainboard
+  const mainboardCards = deck.cards.filter((c) => {
+    const cats = c.categories ?? [];
+    const cat = c.category ?? '';
+    // Exclude if any category is Sideboard or Maybeboard
+    if (cats.some((cat) => cat.toLowerCase() === 'sideboard' || cat.toLowerCase() === 'maybeboard')) return false;
+    if (cat.toLowerCase() === 'sideboard' || cat.toLowerCase() === 'maybeboard') return false;
+    return true;
+  });
+
   // Build the list for card fetching
-  const deckCards = deck.cards.map((c) => ({
+  const deckCards = mainboardCards.map((c) => ({
     name: c.card.oracleCard.name,
     quantity: c.quantity,
-    category: c.category,
+    category: c.categories?.[0] ?? c.category ?? '',
   }));
 
   // Fetch all card data from Scryfall (with cache)
