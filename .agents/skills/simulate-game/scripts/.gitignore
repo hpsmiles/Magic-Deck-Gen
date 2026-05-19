@@ -6,3 +6,4 @@ simulation-games/
 simulation-report.md
 card-cache/
 ruling-cache.json
+.env

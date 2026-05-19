@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import OpenAI from 'openai';
 import type {
   CardInstance,
@@ -30,7 +31,7 @@ export function getLLMClient(): OpenAI {
   if (provider === 'anthropic') {
     return new OpenAI({
       apiKey: process.env.ANTHROPIC_API_KEY ?? '',
-      baseURL: 'https://api.anthropic.com/v1/',
+      baseURL: process.env.LLM_BASE_URL ?? 'https://api.anthropic.com/v1/',
       defaultHeaders: {
         'anthropic-version': '2023-06-01',
       },
@@ -39,6 +40,7 @@ export function getLLMClient(): OpenAI {
 
   return new OpenAI({
     apiKey: process.env.OPENAI_API_KEY ?? '',
+    baseURL: process.env.LLM_BASE_URL ?? undefined,
   });
 }
 
