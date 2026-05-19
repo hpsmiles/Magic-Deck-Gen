@@ -296,6 +296,7 @@ async function runMainPhase(
 ): Promise<GameState> {
   let currentState = state;
   let passed = false;
+  let repromptCount = 0;
 
   while (!passed && !currentState.gameOver) {
     // Check if there are any actions available
@@ -344,13 +345,13 @@ async function runMainPhase(
       const validation = validateAction(currentState, action);
 
       if (!validation.legal) {
-        // Re-prompt with error (handled by continuing the loop)
+        // Log invalid action and continue to next action
         currentState = addLogEntry(currentState, {
           turn: currentState.turn,
           player: activePlayer,
           phase: currentState.step,
           action: 'invalid_action',
-          details: `Invalid action: ${validation.reason}. Re-prompting.`,
+          details: `Invalid action: ${validation.reason}.`,
         });
         continue;
       }
@@ -366,19 +367,31 @@ async function runMainPhase(
       if (sbaResult.gameEnded) return currentState;
     }
 
-    // If all actions were invalid, re-prompt (up to MAX_REPROMPTS)
-    // This is handled by the while loop continuing
-    // But we need to prevent infinite re-prompting
+    // If all actions were invalid, re-prompt up to MAX_REPROMPTS times
     if (allActionsInvalid && !passed) {
-      // Force pass after all actions invalid
-      passed = true;
-      currentState = addLogEntry(currentState, {
-        turn: currentState.turn,
-        player: activePlayer,
-        phase: currentState.step,
-        action: 'pass',
-        details: `Player ${activePlayer} forced to pass (all actions invalid).`,
-      });
+      repromptCount++;
+      if (repromptCount >= MAX_REPROMPTS) {
+        // Force pass after exhausting re-prompts
+        passed = true;
+        currentState = addLogEntry(currentState, {
+          turn: currentState.turn,
+          player: activePlayer,
+          phase: currentState.step,
+          action: 'pass',
+          details: `Player ${activePlayer} forced to pass (all actions invalid after ${MAX_REPROMPTS} re-prompts).`,
+        });
+      } else {
+        currentState = addLogEntry(currentState, {
+          turn: currentState.turn,
+          player: activePlayer,
+          phase: currentState.step,
+          action: 'reprompt',
+          details: `Re-prompting player ${activePlayer} (attempt ${repromptCount}/${MAX_REPROMPTS}).`,
+        });
+      }
+    } else {
+      // Reset reprompt counter on successful action or pass
+      repromptCount = 0;
     }
   }
 
