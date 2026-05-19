@@ -25,7 +25,7 @@ export interface ManaCost {
   red: number;
   green: number;
   colorless: number;
-  x: boolean;
+  x: number;
 }
 
 export interface CardData {
@@ -56,7 +56,7 @@ export interface Permanent {
   tapped: boolean;
   summoningSickness: boolean;
   damage: number;
-  counters: Map<string, number>;
+  counters: Record<string, number>;
   attachments: string[];
   attachedTo: string | null;
   copyOf: string | null;
@@ -80,7 +80,7 @@ export interface PlayerState {
   index: number;
   life: number;
   poisonCounters: number;
-  commanderDamage: Map<string, number>;
+  commanderDamage: Record<string, number>;
   manaPool: ManaPool;
   hand: CardInstance[];
   library: CardInstance[];
