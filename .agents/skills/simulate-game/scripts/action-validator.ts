@@ -41,13 +41,18 @@ export function getLegalActions(state: GameState): LegalActions {
   const availableManaAbilities = getAvailableMana(controlledPermanents);
 
   // Castable spells: non-land cards in hand that can be afforded
+  // Commander tax only applies when casting the commander itself
   const castableSpells = activePlayer.hand.filter((card) => {
     if (isLandCard(card)) return false;
+    const isCommander = state.commandZone.some(
+      (cz) => cz.instance.owner === state.activePlayerIndex && cz.instance.card.scryfallId === card.card.scryfallId
+    );
+    const tax = isCommander ? commanderTax : 0;
     return canAffordSpell(
       card.card,
       activePlayer.manaPool,
       availableManaAbilities,
-      commanderTax
+      tax
     );
   });
 

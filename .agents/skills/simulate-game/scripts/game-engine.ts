@@ -207,7 +207,27 @@ async function runTurn(
 
   // === Draw Step ===
   currentState = { ...currentState, step: 'draw' };
+  // Draw step: Active player draws 1 card
+  // In Commander, drawing from an empty library causes that player to lose
+  const libraryBeforeDraw = currentState.players[activePlayer].library.length;
   currentState = drawCards(currentState, activePlayer, 1);
+  if (libraryBeforeDraw === 0) {
+    // Player attempted to draw from empty library — they lose
+    currentState = addLogEntry(currentState, {
+      turn: currentState.turn,
+      player: activePlayer,
+      phase: 'draw',
+      action: 'state_based_action',
+      details: `Player ${activePlayer} loses — attempted to draw from an empty library`,
+    });
+    // Mark player as eliminated by setting life to 0
+    currentState = {
+      ...currentState,
+      players: currentState.players.map((p, idx) =>
+        idx === activePlayer ? { ...p, life: 0 } : p
+      ),
+    };
+  }
   currentState = {
     ...currentState,
     players: currentState.players.map((p, idx) =>
@@ -413,6 +433,7 @@ async function runCombatPhase(
   // === Declare Attackers ===
   currentState = { ...currentState, step: 'declare_attackers' };
 
+  let combatAssignments: CombatAssignment[] = [];
   const legalActions = getLegalActions(currentState);
 
   if (legalActions.canAttack.length > 0) {
@@ -438,14 +459,14 @@ async function runCombatPhase(
         const validation = validateAction(currentState, action);
         if (validation.legal) {
           // Convert attackers map to CombatAssignment[]
-          const assignments: CombatAssignment[] = Object.entries(action.attackers).map(
+          combatAssignments = Object.entries(action.attackers).map(
             ([attackerId, target]) => ({
               attackerId,
               target,
             })
           );
 
-          currentState = declareAttackers(currentState, assignments);
+          currentState = declareAttackers(currentState, combatAssignments);
         }
       } else if (action.type === 'pass') {
         // No attacks this turn
@@ -454,13 +475,15 @@ async function runCombatPhase(
     }
   }
 
-  // Check if any attackers were declared
-  const attackingPermanents = currentState.battlefield.filter(
-    (p) => p.controller === activePlayer && p.tapped && isCreature(p)
-  );
-
-  // If no attackers, skip the rest of combat
-  if (attackingPermanents.length === 0) {
+  // If no attackers were declared, skip the rest of combat
+  if (combatAssignments.length === 0) {
+    currentState = addLogEntry(currentState, {
+      turn: currentState.turn,
+      player: activePlayer,
+      phase: 'declare_attackers',
+      action: 'pass',
+      details: `Player ${activePlayer} declines to attack.`,
+    });
     return currentState;
   }
 
@@ -522,11 +545,6 @@ async function runCombatPhase(
   // === Resolve Combat Damage ===
   currentState = { ...currentState, step: 'combat_damage' };
 
-  // Reconstruct combat assignments for damage resolution
-  // We need to know which attackers attacked which targets
-  // For v1, we reconstruct from the game log
-  const combatAssignments = reconstructCombatAssignments(currentState, activePlayer);
-
   const combatResult = resolveCombatDamage(currentState, combatAssignments, allBlocks);
   currentState = combatResult.state;
 
@@ -538,35 +556,6 @@ async function runCombatPhase(
   currentState = { ...currentState, step: 'end_combat' };
 
   return currentState;
-}
-
-/**
- * Reconstructs combat assignments from the current game state.
- * For v1, we assume all tapped creatures of the active player attacked
- * and they attacked the next player (round-robin).
- */
-function reconstructCombatAssignments(
-  state: GameState,
-  activePlayer: number
-): CombatAssignment[] {
-  const assignments: CombatAssignment[] = [];
-  const tappedCreatures = state.battlefield.filter(
-    (p) => p.controller === activePlayer && p.tapped && isCreature(p)
-  );
-
-  // Determine default attack target (next player)
-  const opponentIndices = state.players
-    .map((p) => p.index)
-    .filter((idx) => idx !== activePlayer);
-
-  for (const creature of tappedCreatures) {
-    // Default target: first opponent
-    const targetPlayer = opponentIndices[0] ?? 0;
-    const target: Target = { type: 'player', id: String(targetPlayer) };
-    assignments.push({ attackerId: creature.id, target });
-  }
-
-  return assignments;
 }
 
 // === End Step ===
@@ -603,6 +592,7 @@ function runEndStep(state: GameState): GameState {
 
 /**
  * Advances to the next player's turn.
+ * Skips eliminated players (0 life, commander damage >= 21, or poison >= 10).
  * Wraps back to player 0 and increments the turn counter.
  */
 function advanceToNextPlayer(state: GameState): GameState {
@@ -612,8 +602,17 @@ function advanceToNextPlayer(state: GameState): GameState {
   // Find next living player
   for (let i = 0; i < totalPlayers; i++) {
     nextPlayer = (nextPlayer + 1) % totalPlayers;
-    // In v1, all players are considered alive unless gameEnded
-    break;
+    const candidate = state.players[nextPlayer];
+    // Check if this player is still alive
+    if (candidate.life > 0 && candidate.poisonCounters < 10) {
+      const hasCommanderLethal = Object.values(candidate.commanderDamage).some(
+        (dmg) => dmg >= 21
+      );
+      if (!hasCommanderLethal) {
+        break;
+      }
+    }
+    // Player is eliminated, continue to next
   }
 
   const newTurn = nextPlayer === 0 ? state.turn + 1 : state.turn;
@@ -680,8 +679,11 @@ function executeCast(
   const card = player.hand[cardIndex];
   const typeLine = card.card.typeLine.toLowerCase();
 
-  // Calculate total mana cost including commander tax
-  const commanderTax = getCommanderTax(state, activePlayer);
+  // Calculate total mana cost — only apply commander tax when casting the commander
+  const isCommanderCast = state.commandZone.some(
+    (cz) => cz.instance.owner === activePlayer && cz.instance.card.scryfallId === card.card.scryfallId
+  );
+  const commanderTax = isCommanderCast ? getCommanderTax(state, activePlayer) : 0;
   const totalCost = {
     white: card.card.manaCost.white,
     blue: card.card.manaCost.blue,
