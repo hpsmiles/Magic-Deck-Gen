@@ -10,16 +10,16 @@ Quantity,Name,Finish,Condition,Language,Edition Code,Scryfall ID,Collector Numbe
 1,Child of Night,Normal,NM,EN,,3887af00-a87d-4396-b82b-38b88c084e8e,218
 1,Exsanguinate,Normal,NM,EN,,f11d7311-4066-4a5d-ba28-9857fa707a0b,173
 1,Basilisk Collar,Normal,NM,EN,,7b36fba7-71f7-4b7f-bde5-b3a9752ad21c,669
-1,Whispersilk Cloak,Normal,NM,EN,,5a12bfaf-7481-4e6a-98c8-6308d075382b,257
-1,Defile,Normal,NM,EN,,5bcb4398-edd1-41a7-a496-b12bce22ceb6,86
+1,Charming Prince,Normal,NM,EN,,aa7b47e1-7e32-4f2f-aecf-bac7ca197081,313
+1,Blood Seeker,Normal,NM,EN,,fe88cbee-5f6c-47e0-8a84-192c4c2ca984,614
 1,Blood Artist,Normal,NM,EN,,b5275d76-2947-4219-be21-614c7421614a,209
 1,Zulaport Cutthroat,Normal,NM,EN,,c43609fb-3cee-44e0-98d0-3ecaba1d5767,233
 1,Viscera Seer,Normal,NM,EN,,f511830b-1c1f-4d30-aa5d-4314726d142e,229
 1,Vampiric Rites,Normal,NM,EN,,9ae0b1e0-a481-4a98-b67b-0cf8bac53fdd,615
 1,Skullclamp,Normal,NM,EN,,b5bb89dd-9d31-49d9-ba54-4a04798e515e,103
-1,Village Rites,Normal,NM,EN,,42ed35e9-51cd-468a-86a9-9412553cf50d,137
+1,Vengeful Bloodwitch,Normal,NM,EN,,bd0c12dd-f138-45c0-9614-d83a1d8e8399,466
 1,Corrupted Conviction,Normal,NM,EN,,8046f892-3317-4ef7-9cf7-97b9060540c8,84
-1,Deadly Dispute,Normal,NM,EN,,b22ef77b-67a3-45d3-9d18-12b7b124cbf4,177
+1,Fake Your Own Death,Normal,NM,EN,,693635a6-df50-44c5-9598-0c79b45d4df4,528
 1,Path to Exile,Normal,NM,EN,,90b690f4-9647-4e67-b7cb-b2692ea149b1,159
 1,Anguished Unmaking,Normal,NM,EN,,407183c6-c962-4f8c-867e-abc309b6c573,293
 1,Mortify,Normal,NM,EN,,88e85619-3a7d-48c2-b9b0-20718c913696,662
@@ -27,7 +27,7 @@ Quantity,Name,Finish,Condition,Language,Edition Code,Scryfall ID,Collector Numbe
 1,Murder,Normal,NM,EN,,2c249609-9cf7-46f1-b94c-9329add966bb,110
 1,Doom Blade,Normal,NM,EN,,90699423-2556-40f7-b8f5-c9d82f22d52e,87
 1,Grasp of Darkness,Normal,NM,EN,,7737b578-8ae3-4846-b508-93ef40f25244,102
-1,Wrath of God,Normal,NM,EN,,537d2b05-3f52-45d6-8fe3-26282085d0c6,70
+1,Fumigate,Normal,NM,EN,,976f6850-e646-4b51-a103-25240658672d,684
 1,Massacre Wurm,Normal,NM,EN,,670a36cc-34e1-4d11-808e-1b6bc88eb5d8,754
 1,Feed the Swarm,Normal,NM,EN,,a776f96b-01bf-430a-b1ad-9f4651070610,180
 1,Phyrexian Arena,Normal,NM,EN,,0784b6f0-9ebf-43d2-ba0f-a6bc93ba0c48,180
@@ -36,7 +36,7 @@ Quantity,Name,Finish,Condition,Language,Edition Code,Scryfall ID,Collector Numbe
 1,Inspiring Overseer,Normal,NM,EN,,79016cf3-6eea-4b21-9ff3-f187d606e19a,736
 1,Mazemind Tome,Normal,NM,EN,,f45072cd-e3f2-4090-b984-50ec8d360bf2,676
 1,Midnight Reaper,Normal,NM,EN,,f229b0e6-1ffd-410e-b04b-a0afc179c58c,609
-1,Macabre Waltz,Normal,NM,EN,,4d1f3c84-89ba-4426-a80b-d524f172c912,177
+1,Helpful Hunter,Normal,NM,EN,,1b9a0e91-80b5-428f-8f08-931d0631be14,466
 1,Sol Ring,Normal,NM,EN,,870ec754-a76c-40ea-9b81-81b3dca1f62c,128
 1,Arcane Signet,Normal,NM,EN,,7811dd72-61b9-4067-ac20-cea153e625d2,127
 1,Mind Stone,Normal,NM,EN,,ad881aa0-decc-447b-8c8a-983546a9a55a,352
@@ -47,9 +47,9 @@ Quantity,Name,Finish,Condition,Language,Edition Code,Scryfall ID,Collector Numbe
 1,Solemn Simulacrum,Normal,NM,EN,,29fae212-b757-4e5f-ad9b-06cd09782f9f,355
 1,Sun Titan,Normal,NM,EN,,3d6eacf2-f6c7-4ede-b5a5-7463602699ae,178
 1,Cadaver Imp,Normal,NM,EN,,f06ab823-9591-460d-a896-3073d9843df0,141
-1,Sevinne's Reclamation,Normal,NM,EN,,8deab1ef-4219-4767-a3c4-b61250d0ebe0,170
+1,Lyra Dawnbringer,Normal,NM,EN,,f9fa30b6-3a33-46fd-8b32-ac1cfa41500d,426
 1,"Kambal, Profiteering Mayor",Normal,NM,EN,,d53a775d-5898-41a8-b404-9b7d4721c6ba,211
-1,Lurrus of the Dream-Den,Normal,NM,EN,,5ad36fb2-c44e-4085-ba0d-54277841ad3a,226
+1,Rhox Faithmender,Normal,NM,EN,,c79a8938-aae6-42ff-888c-2783e11a8d4f,735
 1,Undying Malice,Normal,NM,EN,,97b3cf11-e352-4ee1-8c03-13898f576ef9,528
 1,Felidar Retreat,Normal,NM,EN,,89e3cc09-5057-4c05-88fc-d6cda809fc74,574
 1,Stroke of Midnight,Normal,NM,EN,,b000f605-177f-459d-a197-fcf54efec2fb,132
@@ -74,9 +74,9 @@ Quantity,Name,Finish,Condition,Language,Edition Code,Scryfall ID,Collector Numbe
 1,Cryptic Caves,Normal,NM,EN,,9d126c8f-a3df-497c-aad5-a448c55f51cc,771
 1,Shefet Dunes,Normal,NM,EN,,c9b0a526-73b0-4501-80a3-f16dbef9cdfd,318
 1,Desert of the True,Normal,NM,EN,,8d8c5284-7f56-46e5-8226-1e5cedf2aeb9,286
-1,Krosan Verge,Normal,NM,EN,,19fc5bec-f877-430c-8e83-e6c5fe97f3c4,304
+1,Cactus Preserve,Normal,NM,EN,,ad9d426f-5870-42bb-a589-9218f7e35d62,464
 1,Demolition Field,Normal,NM,EN,,0c7e51b6-4898-4632-b39c-3ce438caa882,687
-1,Endless Sands,Normal,NM,EN,,f436df63-41b9-416d-8e41-035261d4d0cc,272
+1,Sandstorm Verge,Normal,NM,EN,,3ab4e0a4-2faf-456b-99e3-ee06c008538c,464
 1,Dunes of the Dead,Normal,NM,EN,,cd86b0af-9c26-4c3a-8e1e-74a28263bd83,291
-1,Hostile Desert,Normal,NM,EN,,d71031c2-7379-4d83-b6d6-61f3104593c4,266
+1,Conduit Pylons,Normal,NM,EN,,5ffa48cc-b991-4d47-b7ec-cf678915c758,464
 1,Bucolic Ranch,Normal,NM,EN,,6c4f6b81-53d0-49fb-b404-c2ad67de7493,265
