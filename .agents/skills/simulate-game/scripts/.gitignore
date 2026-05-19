@@ -1,0 +1,7 @@
+node_modules/
+dist/
+simulation-results.json
+simulation-games/
+simulation-report.md
+card-cache/
+ruling-cache.json
