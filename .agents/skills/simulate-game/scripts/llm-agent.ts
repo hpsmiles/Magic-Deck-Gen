@@ -338,6 +338,36 @@ export function formatLegalActions(legal: LegalActions): string {
  * Sends a game state and legal actions to the LLM and returns the agent's decision.
  * Falls back to a pass action on any error or parse failure.
  */
+export async function llmCallWithRetry(
+  client: OpenAI,
+  model: string,
+  messages: { role: string; content: string }[],
+  maxRetries = 5,
+  temperature = 0.7
+): Promise<string | null> {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const response = await client.chat.completions.create({
+        model,
+        messages: messages as any,
+        response_format: { type: 'json_object' },
+        temperature,
+      });
+      return response.choices[0]?.message?.content ?? null;
+    } catch (err: any) {
+      const isRateLimit = err?.status === 429 || err?.message?.includes('429');
+      if (isRateLimit && attempt < maxRetries - 1) {
+        const delay = Math.min(1000 * Math.pow(2, attempt) + Math.random() * 500, 30000);
+        console.warn(`    [Rate limited, retry ${attempt + 1}/${maxRetries} in ${Math.round(delay)}ms]`);
+        await new Promise((r) => setTimeout(r, delay));
+      } else {
+        throw err;
+      }
+    }
+  }
+  return null;
+}
+
 export async function getAgentDecision(
   request: LLMActionRequest
 ): Promise<LLMActionResponse> {
@@ -363,32 +393,26 @@ export async function getAgentDecision(
       '=== RECENT ACTIONS ===',
       recentActionsText,
       '',
-      'Choose your actions. Respond with JSON: { "actions": [...], "reasoning": "..." }',
-      'Each action should have a "type" field (cast, activate, attack, block, pass, play_land, respond).',
-      'For cast/play_land: include "cardId". For activate: include "permanentId".',
-      'Commanders can be cast from the command zone using their command zone ID (e.g. "commander-0").',
-      'For attack: include "attackers" as { "permanentId": { "type": "player", "id": "targetId" } }.',
-      'For block: include "blockers" as { "blockerId": ["attackerId"] }.',
+      'CRITICAL: Use EXACT card/permanent IDs shown in brackets [like-this-id], NEVER card names.',
+      'For cast: {"type":"cast","cardId":"card-123"}. For play_land: {"type":"play_land","cardId":"card-456"}.',
+      'For activate (tap land for mana): {"type":"activate","permanentId":"perm-7"}.',
+      'For attack: {"type":"attack","attackers":{"perm-3":{"type":"player","id":"0"}}}.',
+      'For block: {"type":"block","blockers":{"perm-9":["perm-3"]}}.',
+      'Commanders: use their command zone ID (e.g. "commander-0") for cast.',
+      'You can return MULTIPLE actions: activate lands FIRST, then cast spells.',
     ].join('\n');
 
-    const response = await client.chat.completions.create({
-      model,
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are an expert Magic: The Gathering Commander player. Analyze the game state and choose the best actions. Respond with JSON: { "actions": [...], "reasoning": "..." }',
-        },
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.7,
-    });
+    const systemPrompt =
+      'You are an expert Magic: The Gathering Commander player. ' +
+      'Use EXACT card/permanent/permanent IDs from the game state (the value inside [brackets]). ' +
+      'Never use card names. Always activate lands via "activate" before casting spells. ' +
+      'Respond with JSON: { "actions": [...], "reasoning": "..." }';
 
-    const content = response.choices[0]?.message?.content;
+    const content = await llmCallWithRetry(client, model, [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ]);
+
     if (!content) {
       return {
         actions: [{ type: 'pass' }],
@@ -477,24 +501,17 @@ export async function getMulliganDecision(
       `Remember: you have ${hand.length} cards and will draw to ${7 - mulligansTaken} cards if you mulligan (bottom ${mulligansTaken} after scry).`,
     ].join('\n');
 
-    const response = await client.chat.completions.create({
-      model,
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a Magic: The Gathering player deciding whether to keep your opening hand. Analyze the hand quality considering land count, mana curve, color requirements, and synergy. Respond with JSON: { "keep": boolean, "reasoning": string }',
-        },
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.3,
-    });
-
-    const content = response.choices[0]?.message?.content;
+    const content = await llmCallWithRetry(client, model, [
+      {
+        role: 'system',
+        content:
+          'You are a Magic: The Gathering player deciding whether to keep your opening hand. Analyze the hand quality considering land count, mana curve, color requirements, and synergy. Respond with JSON: { "keep": boolean, "reasoning": string }',
+      },
+      {
+        role: 'user',
+        content: userPrompt,
+      },
+    ], 5, 0.3);
     if (!content) {
       return { keep: true, reasoning: 'Failed to parse mulligan decision' };
     }

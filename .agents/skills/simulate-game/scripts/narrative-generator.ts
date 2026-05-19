@@ -2,7 +2,7 @@ import { writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { DeckStats, GameResult, TournamentResult } from './types.js';
-import { getLLMClient, getDefaultModel } from './llm-agent.js';
+import { getLLMClient, getDefaultModel, llmCallWithRetry } from './llm-agent.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -86,21 +86,16 @@ export async function generateNarrativeReport(
     const client = getLLMClient();
     const model = getDefaultModel();
 
-    const response = await client.chat.completions.create({
-      model,
-      messages: [
+    const content = await llmCallWithRetry(client, model, [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
-      ],
-      temperature: 0.7,
-    });
+    ]);
 
-    let content = response.choices[0]?.message?.content ?? '';
     if (content) {
       // Strip markdown code fences if the LLM wrapped its output
-      content = content.replace(/^```(?:markdown)?\s*\n?/i, '').replace(/\n?```\s*$/, '');
+      const cleaned = content.replace(/^```(?:markdown)?\s*\n?/i, '').replace(/\n?```\s*$/, '');
       const reportPath = join(__dirname, '..', 'simulation-report.md');
-      writeFileSync(reportPath, content, 'utf-8');
+      writeFileSync(reportPath, cleaned, 'utf-8');
       return;
     }
 

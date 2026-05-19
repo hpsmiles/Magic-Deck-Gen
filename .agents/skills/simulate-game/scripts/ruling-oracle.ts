@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { RulingRequest, RulingResponse } from './types.js';
-import { getLLMClient, getDefaultModel } from './llm-agent.js';
+import { getLLMClient, getDefaultModel, llmCallWithRetry } from './llm-agent.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -75,17 +75,11 @@ export async function getRuling(request: RulingRequest): Promise<RulingResponse>
     const client = getLLMClient();
     const model = getDefaultModel();
 
-    const response = await client.chat.completions.create({
-      model,
-      temperature: 0.2,
-      response_format: { type: 'json_object' },
-      messages: [
+    const content = await llmCallWithRetry(client, model, [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },
-      ],
-    });
+    ], 5, 0.2);
 
-    const content = response.choices[0]?.message?.content;
     if (!content) {
       return {
         ruling: 'unable to determine',
