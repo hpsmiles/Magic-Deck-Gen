@@ -72,13 +72,13 @@ export async function generateNarrativeReport(
       return `Game ${i + 1}: ${winnerStr} | Total Turns: ${game.totalTurns} | Players: ${playersStr}`;
     }),
     '',
-    '=== KEY GAME LOGS (last 20 entries per game) ===',
-    ...gameResults.slice(0, 5).map((game, i) => {
+    '=== KEY GAME LOGS (most interesting games, last 20 entries each) ===',
+    ...selectInterestingGames(gameResults, 5).map(({ game, index }) => {
       const logEntries = game.log
         .slice(-20)
         .map((e) => `  T${e.turn} P${e.player} ${e.phase}: ${e.action}${e.card ? ` (${e.card})` : ''} — ${e.details}`)
         .join('\n');
-      return `Game ${i + 1} (last 20 entries):\n${logEntries}`;
+      return `Game ${index + 1} (last 20 entries):\n${logEntries}`;
     }),
   ].join('\n');
 
@@ -95,8 +95,10 @@ export async function generateNarrativeReport(
       temperature: 0.7,
     });
 
-    const content = response.choices[0]?.message?.content;
+    let content = response.choices[0]?.message?.content ?? '';
     if (content) {
+      // Strip markdown code fences if the LLM wrapped its output
+      content = content.replace(/^```(?:markdown)?\s*\n?/i, '').replace(/\n?```\s*$/, '');
       const reportPath = join(__dirname, '..', 'simulation-report.md');
       writeFileSync(reportPath, content, 'utf-8');
       return;
@@ -111,6 +113,34 @@ export async function generateNarrativeReport(
   const fallbackReport = buildFallbackReport(tournamentResult, gameResults);
   const reportPath = join(__dirname, '..', 'simulation-report.md');
   writeFileSync(reportPath, fallbackReport, 'utf-8');
+}
+
+/**
+ * Selects the most interesting games for the LLM prompt.
+ * Prioritizes: longest games (closest), games with comebacks, then fills with others.
+ */
+function selectInterestingGames(
+  games: GameResult[],
+  count: number
+): Array<{ game: GameResult; index: number }> {
+  if (games.length <= count) {
+    return games.map((game, index) => ({ game, index }));
+  }
+
+  // Score each game by "interestingness" — longer games are more interesting
+  const scored = games.map((game, index) => ({
+    game,
+    index,
+    score: game.totalTurns + (game.log.length * 0.1),
+  }));
+
+  // Sort by score descending and take top N
+  scored.sort((a, b) => b.score - a.score);
+  const selected = scored.slice(0, count);
+
+  // Return in original game order for readability
+  selected.sort((a, b) => a.index - b.index);
+  return selected.map(({ game, index }) => ({ game, index }));
 }
 
 /**

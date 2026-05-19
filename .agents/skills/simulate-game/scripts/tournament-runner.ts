@@ -8,6 +8,11 @@ import { shuffleArray } from './game-state.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+export interface TournamentOutput {
+  tournament: TournamentResult;
+  gameResults: GameResult[];
+}
+
 /**
  * Runs a tournament of Commander games across multiple decks.
  *
@@ -16,12 +21,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  * 3. Saves per-game results to simulation-games/game-{NNN}.json
  * 4. Calculates aggregate statistics per deck
  * 5. Writes simulation-results.json with the full TournamentResult
- * 6. Returns the TournamentResult
+ * 6. Returns both the TournamentResult and individual GameResult[]
  */
 export async function runTournament(
   decks: DeckInput[],
   numGames: number
-): Promise<TournamentResult> {
+): Promise<TournamentOutput> {
   const tournamentId = crypto.randomUUID();
   const deckNames = decks.map((d) => d.name);
 
@@ -29,25 +34,41 @@ export async function runTournament(
   const outputDir = join(__dirname, '..', 'simulation-games');
   mkdirSync(outputDir, { recursive: true });
 
-  // Stats tracking per deck name
-  const statsMap = new Map<
-    string,
-    { wins: number; losses: number; totalTurnsSurvived: number; gamesPlayed: number }
-  >();
-
+  // Stats tracking per deck name (Record for JSON-serializable consistency)
+  const statsAcc: Record<string, { wins: number; losses: number; totalTurnsSurvived: number; gamesPlayed: number }> = {};
   for (const name of deckNames) {
-    statsMap.set(name, { wins: 0, losses: 0, totalTurnsSurvived: 0, gamesPlayed: 0 });
+    statsAcc[name] = { wins: 0, losses: 0, totalTurnsSurvived: 0, gamesPlayed: 0 };
   }
 
   const gameLogs: string[] = [];
+  const allGameResults: GameResult[] = [];
 
   for (let gameNum = 1; gameNum <= numGames; gameNum++) {
     // Randomize seat order by shuffling a copy of the deck array
     const seatOrder = shuffleArray(decks.map((d, i) => i));
     const shuffledDecks = seatOrder.map((i) => decks[i]);
 
-    // Run the game
-    const result: GameResult = await runGame(shuffledDecks);
+    // Run the game (with error recovery)
+    let result: GameResult;
+    try {
+      result = await runGame(shuffledDecks);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`Game ${gameNum} failed: ${msg}`);
+      // Record as a draw/timeout — no winner
+      result = {
+        gameId: `error-game-${gameNum}`,
+        players: shuffledDecks.map((d, i) => ({
+          deckName: d.name,
+          seatIndex: i,
+          result: 'loss' as const,
+          turnsSurvived: 0,
+        })),
+        winner: null,
+        totalTurns: 0,
+        log: [],
+      };
+    }
 
     // Remap player results back to original deck names
     // seatOrder[seatIndex] gives the original deck index
@@ -69,9 +90,15 @@ export async function runTournament(
       winner: remappedWinner,
     };
 
+    allGameResults.push(remappedResult);
+
     // Update stats
     for (const pr of remappedResult.players) {
-      const stats = statsMap.get(pr.deckName)!;
+      const stats = statsAcc[pr.deckName];
+      if (!stats) {
+        console.error(`Unknown deck in results: ${pr.deckName}`);
+        continue;
+      }
       stats.gamesPlayed++;
       if (pr.result === 'win') {
         stats.wins++;
@@ -90,13 +117,13 @@ export async function runTournament(
 
   // Calculate aggregate statistics
   const results: Record<string, DeckStats> = {};
-  for (const [name, stats] of statsMap) {
+  for (const [name, acc] of Object.entries(statsAcc)) {
     results[name] = {
-      wins: stats.wins,
-      losses: stats.losses,
-      winRate: stats.gamesPlayed > 0 ? stats.wins / stats.gamesPlayed : 0,
+      wins: acc.wins,
+      losses: acc.losses,
+      winRate: acc.gamesPlayed > 0 ? acc.wins / acc.gamesPlayed : 0,
       avgTurnsSurvived:
-        stats.gamesPlayed > 0 ? stats.totalTurnsSurvived / stats.gamesPlayed : 0,
+        acc.gamesPlayed > 0 ? acc.totalTurnsSurvived / acc.gamesPlayed : 0,
     };
   }
 
@@ -112,5 +139,5 @@ export async function runTournament(
   const resultsPath = join(__dirname, '..', 'simulation-results.json');
   writeFileSync(resultsPath, JSON.stringify(tournamentResult, null, 2), 'utf-8');
 
-  return tournamentResult;
+  return { tournament: tournamentResult, gameResults: allGameResults };
 }

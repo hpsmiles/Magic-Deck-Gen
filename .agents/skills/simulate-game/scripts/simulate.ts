@@ -1,10 +1,9 @@
-import { readFile } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isArchidektUrl, fetchDeckFromArchidekt, loadDeckFromLocalFile } from './archidekt-fetcher.js';
 import { runTournament } from './tournament-runner.js';
 import { generateNarrativeReport } from './narrative-generator.js';
-import type { DeckInput, TournamentResult, GameResult } from './types.js';
+import type { DeckInput, TournamentResult } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -97,8 +96,9 @@ async function loadDecks(sources: string[]): Promise<DeckInput[]> {
         console.log(`Fetching deck from Archidekt: ${source}`);
         deck = await fetchDeckFromArchidekt(source);
       } else {
-        console.log(`Loading deck from file: ${source}`);
-        deck = await loadDeckFromLocalFile(source);
+        const resolvedPath = resolve(source);
+        console.log(`Loading deck from file: ${resolvedPath}`);
+        deck = await loadDeckFromLocalFile(resolvedPath);
       }
 
       decks.push(deck);
@@ -129,20 +129,7 @@ async function main(): Promise<void> {
 
   console.log(`\nRunning tournament: ${decks.length} decks, ${numGames} game(s)...\n`);
 
-  const tournamentResult = await runTournament(decks, numGames);
-
-  // Load game results from saved files for narrative generation
-  const gameResults: GameResult[] = [];
-  for (const gameLogPath of tournamentResult.gameLogs) {
-    try {
-      const fullPath = join(__dirname, '..', gameLogPath);
-      const raw = await readFile(fullPath, 'utf-8');
-      gameResults.push(JSON.parse(raw) as GameResult);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error(`Warning: Could not read game log ${gameLogPath}: ${message}`);
-    }
-  }
+  const { tournament: tournamentResult, gameResults } = await runTournament(decks, numGames);
 
   // Generate narrative report
   try {
