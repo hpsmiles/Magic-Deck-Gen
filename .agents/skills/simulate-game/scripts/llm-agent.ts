@@ -97,6 +97,25 @@ export function formatManaPool(pool: ManaPool): string {
 }
 
 /**
+ * Strips markdown code fences, trims whitespace, and extracts the first valid JSON
+ * object/array from LLM output. Handles trailing text, leading text, and fences.
+ */
+function extractJSON(raw: string): string {
+  // Remove markdown code fences
+  let cleaned = raw
+    .replace(/^```(?:json)?\s*\n?/i, '')
+    .replace(/\n?```\s*$/i, '')
+    .trim();
+  // Find the first '{' and last '}' to extract JSON object
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start !== -1 && end !== -1 && end > start) {
+    cleaned = cleaned.slice(start, end + 1);
+  }
+  return cleaned;
+}
+
+/**
  * Formats a mana cost object as a human-readable string like "2W 1U 3".
  */
 function formatManaCost(cost: { white: number; blue: number; black: number; red: number; green: number; colorless: number }): string {
@@ -338,26 +357,46 @@ export function formatLegalActions(legal: LegalActions): string {
  * Sends a game state and legal actions to the LLM and returns the agent's decision.
  * Falls back to a pass action on any error or parse failure.
  */
+let lastApiCallTime = 0;
+
+/** Minimum delay between consecutive API calls to avoid rate limit bursts. */
+const MIN_API_INTERVAL_MS = 600;
+
+/**
+ * Calls the LLM with retry logic for 429 rate limits and throttling.
+ * - Retries 3 times with backoff: 500ms → 1000ms → 2000ms
+ * - Enforces minimum 600ms gap between consecutive calls
+ */
 export async function llmCallWithRetry(
   client: OpenAI,
   model: string,
   messages: { role: string; content: string }[],
-  maxRetries = 5,
+  maxRetries = 3,
   temperature = 0.7
 ): Promise<string | null> {
+  // Throttle: ensure minimum gap since last API call
+  const now = Date.now();
+  const elapsed = now - lastApiCallTime;
+  if (elapsed < MIN_API_INTERVAL_MS) {
+    const wait = MIN_API_INTERVAL_MS - elapsed;
+    await new Promise((r) => setTimeout(r, wait));
+  }
+
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
+      lastApiCallTime = Date.now();
+      // Note: response_format intentionally omitted for compatibility with
+      // local servers (LM Studio, Ollama) that don't support json_object mode.
       const response = await client.chat.completions.create({
         model,
         messages: messages as any,
-        response_format: { type: 'json_object' },
         temperature,
       });
       return response.choices[0]?.message?.content ?? null;
     } catch (err: any) {
       const isRateLimit = err?.status === 429 || err?.message?.includes('429');
       if (isRateLimit && attempt < maxRetries - 1) {
-        const delay = Math.min(1000 * Math.pow(2, attempt) + Math.random() * 500, 30000);
+        const delay = Math.min(500 * Math.pow(2, attempt) + Math.random() * 250, 5000);
         console.warn(`    [Rate limited, retry ${attempt + 1}/${maxRetries} in ${Math.round(delay)}ms]`);
         await new Promise((r) => setTimeout(r, delay));
       } else {
@@ -406,7 +445,7 @@ export async function getAgentDecision(
       'You are an expert Magic: The Gathering Commander player. ' +
       'Use EXACT card/permanent/permanent IDs from the game state (the value inside [brackets]). ' +
       'Never use card names. Always activate lands via "activate" before casting spells. ' +
-      'Respond with JSON: { "actions": [...], "reasoning": "..." }';
+      'Respond with raw JSON only — no markdown, no code fences, just JSON: { "actions": [...], "reasoning": "..." }';
 
     const content = await llmCallWithRetry(client, model, [
       { role: 'system', content: systemPrompt },
@@ -420,7 +459,7 @@ export async function getAgentDecision(
       };
     }
 
-    const parsed = JSON.parse(content) as {
+    const parsed = JSON.parse(extractJSON(content)) as {
       actions?: unknown[];
       reasoning?: string;
     };
@@ -516,7 +555,7 @@ export async function getMulliganDecision(
       return { keep: true, reasoning: 'Failed to parse mulligan decision' };
     }
 
-    const parsed = JSON.parse(content) as {
+    const parsed = JSON.parse(extractJSON(content)) as {
       keep?: unknown;
       reasoning?: unknown;
     };

@@ -55,6 +55,35 @@ const MAX_TURNS = 50;
 /** Max LLM re-prompts on invalid actions before forcing a pass. */
 const MAX_REPROMPTS = 3;
 
+/** Max consecutive invalid-action LLM responses before auto-pass. */
+const MAX_CONSECUTIVE_INVALID = 2;
+
+/**
+ * Strips common LLM formatting mistakes from action IDs.
+ * LLMs often wrap card/permanent IDs in brackets: [card-123] or "perm-7"
+ */
+function sanitizeAction(action: GameAction): GameAction {
+  const strip = (s: string | undefined): string | undefined => {
+    if (s === undefined) return s;
+    return s.replace(/^\[|\]$/g, '').replace(/^"|"$/g, '').trim();
+  };
+  return {
+    ...action,
+    cardId: strip(action.cardId),
+    permanentId: strip(action.permanentId),
+    attackers: action.attackers
+      ? Object.fromEntries(
+          Object.entries(action.attackers).map(([k, v]) => [strip(k) ?? k, v])
+        )
+      : action.attackers,
+    blockers: action.blockers
+      ? Object.fromEntries(
+          Object.entries(action.blockers).map(([k, v]) => [strip(k) ?? k, v])
+        )
+      : action.blockers,
+  };
+}
+
 // === Main Entry Point ===
 
 /**
@@ -335,6 +364,7 @@ async function runMainPhase(
   let currentState = state;
   let passed = false;
   let repromptCount = 0;
+  let consecutiveInvalid = 0;
 
   while (!passed && !currentState.gameOver) {
     // Check if there are any actions available
@@ -395,9 +425,12 @@ async function runMainPhase(
 
     const response = await getAgentDecision(request);
 
+    // Sanitize actions: strip brackets, quotes from IDs (common LLM mistakes)
+    const sanitizedActions = response.actions.map(sanitizeAction);
+
     // Log LLM decision for debugging
     console.log(`    [LLM P${activePlayer} ${currentState.step}] ${response.reasoning.slice(0, 120)}`);
-    const actionSummary = response.actions.map((a: GameAction) =>
+    const actionSummary = sanitizedActions.map((a: GameAction) =>
       a.type === 'cast' ? `cast(${a.cardId})` :
       a.type === 'play_land' ? `land(${a.cardId})` :
       a.type === 'activate' ? `tap(${a.permanentId})` :
@@ -410,7 +443,7 @@ async function runMainPhase(
     // Process each action from the LLM response
     let allActionsInvalid = true;
 
-    for (const action of response.actions) {
+    for (const action of sanitizedActions) {
       if (action.type === 'pass') {
         passed = true;
         allActionsInvalid = false;
@@ -424,7 +457,7 @@ async function runMainPhase(
         break;
       }
 
-      // Validate the action
+      // Validate the sanitized action
       const validation = validateAction(currentState, action);
 
       if (!validation.legal) {
@@ -457,29 +490,43 @@ async function runMainPhase(
 
     // If all actions were invalid, re-prompt up to MAX_REPROMPTS times
     if (allActionsInvalid && !passed) {
-      repromptCount++;
-      if (repromptCount >= MAX_REPROMPTS) {
-        // Force pass after exhausting re-prompts
+      consecutiveInvalid++;
+      if (consecutiveInvalid >= MAX_CONSECUTIVE_INVALID) {
+        // Fail-fast: consecutive fully-invalid responses → force pass
         passed = true;
         currentState = addLogEntry(currentState, {
           turn: currentState.turn,
           player: activePlayer,
           phase: currentState.step,
           action: 'pass',
-          details: `Player ${activePlayer} forced to pass (all actions invalid after ${MAX_REPROMPTS} re-prompts).`,
+          details: `Player ${activePlayer} forced to pass (${consecutiveInvalid} consecutive invalid responses).`,
         });
       } else {
-        currentState = addLogEntry(currentState, {
-          turn: currentState.turn,
-          player: activePlayer,
-          phase: currentState.step,
-          action: 'reprompt',
-          details: `Re-prompting player ${activePlayer} (attempt ${repromptCount}/${MAX_REPROMPTS}).`,
-        });
+        repromptCount++;
+        if (repromptCount >= MAX_REPROMPTS) {
+          // Force pass after exhausting re-prompts
+          passed = true;
+          currentState = addLogEntry(currentState, {
+            turn: currentState.turn,
+            player: activePlayer,
+            phase: currentState.step,
+            action: 'pass',
+            details: `Player ${activePlayer} forced to pass (all actions invalid after ${MAX_REPROMPTS} re-prompts).`,
+          });
+        } else {
+          currentState = addLogEntry(currentState, {
+            turn: currentState.turn,
+            player: activePlayer,
+            phase: currentState.step,
+            action: 'reprompt',
+            details: `Re-prompting player ${activePlayer} (attempt ${repromptCount}/${MAX_REPROMPTS}).`,
+          });
+        }
       }
     } else {
-      // Reset reprompt counter on successful action or pass
+      // Reset reprompt counters on successful action or pass
       repromptCount = 0;
+      consecutiveInvalid = 0;
     }
   }
 

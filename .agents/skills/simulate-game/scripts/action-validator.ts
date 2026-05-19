@@ -219,6 +219,9 @@ export function validateAction(
     }
 
     case 'attack': {
+      if (state.step !== 'declare_attackers') {
+        return { legal: false, reason: 'Can only attack during declare attackers step' };
+      }
       if (!action.attackers || Object.keys(action.attackers).length === 0) {
         return {
           legal: false,
@@ -247,6 +250,9 @@ export function validateAction(
     }
 
     case 'block': {
+      if (state.step !== 'declare_blockers') {
+        return { legal: false, reason: 'Can only block during declare blockers step' };
+      }
       if (!action.blockers || Object.keys(action.blockers).length === 0) {
         return {
           legal: false,
@@ -299,8 +305,7 @@ export function validateAction(
 
 /**
  * Returns true if any non-pass action is available to the active player.
- * Note: canBlock is only relevant during the declare_blockers step,
- * so it's excluded from this check (used for main phase decisions).
+ * Phase-sensitive: attack/block only count during their respective steps.
  */
 export function hasActionsAvailable(state: GameState): boolean {
   const legal = getLegalActions(state);
@@ -309,7 +314,8 @@ export function hasActionsAvailable(state: GameState): boolean {
     legal.castableCommanders.length > 0 ||
     legal.playableLands.length > 0 ||
     legal.activatableAbilities.length > 0 ||
-    legal.canAttack.length > 0 ||
-    legal.canRespond
+    (state.step === 'declare_attackers' && legal.canAttack.length > 0) ||
+    (state.step === 'declare_blockers' && legal.canBlock.length > 0) ||
+    (state.stack.length > 0 && legal.canRespond)
   );
 }
