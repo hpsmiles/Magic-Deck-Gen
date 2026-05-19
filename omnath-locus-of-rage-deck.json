@@ -53,10 +53,10 @@
       "scryfallId": "3976affd-8c2b-499a-a946-b629c2ba59c7"
     },
     {
-      "name": "Rampant Growth",
+      "name": "Bushwhack",
       "quantity": 1,
       "category": "ramp",
-      "scryfallId": "b7c47024-5e08-4b17-b41a-7647f8b814b9"
+      "scryfallId": "03ebdb36-55e0-49dd-a514-785fbeb4ae19"
     },
     {
       "name": "Burnished Hart",
@@ -191,10 +191,10 @@
       "scryfallId": "d0b7cecf-b51b-4d30-b7e9-cd7976271e07"
     },
     {
-      "name": "Shigeki, Jukai Visionary",
+      "name": "Map the Frontier",
       "quantity": 1,
       "category": "creature",
-      "scryfallId": "ed8ea0da-c9d4-4158-aaa7-ebe2fe2b1e15"
+      "scryfallId": "165f4428-e1a1-477d-bd90-138189e88163"
     },
     {
       "name": "Viridian Emissary",
@@ -269,10 +269,10 @@
       "scryfallId": "b58c4033-f764-42f6-966f-b7202a2babbf"
     },
     {
-      "name": "Thrill of Possibility",
+      "name": "Obliterate",
       "quantity": 1,
       "category": "draw",
-      "scryfallId": "882b348c-076b-41d8-b505-063480636669"
+      "scryfallId": "c85f9623-5900-473c-a3b1-f98473b9a545"
     },
     {
       "name": "Life from the Loam",
@@ -287,10 +287,10 @@
       "scryfallId": "d3340062-3071-4d8e-98f8-fd3343a011ad"
     },
     {
-      "name": "Dragon Fodder",
+      "name": "Vengeful Regrowth",
       "quantity": 1,
       "category": "draw",
-      "scryfallId": "f9abe517-f601-4784-8d62-2350bd755146"
+      "scryfallId": "cccb3db6-6ab2-4ce9-beaa-99b352116676"
     },
     {
       "name": "Crawling Sensation",

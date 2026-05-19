@@ -5,7 +5,7 @@
 1 Lotus Cobra
 1 Bloom Tender
 1 Explore
-1 Rampant Growth
+1 Bushwhack
 1 Burnished Hart
 1 Elvish Reclaimer
 1 Gilded Lotus
@@ -28,7 +28,7 @@
 1 Titania, Protector of Argoth
 1 Patient Naturalist
 1 Impact Tremors
-1 Shigeki, Jukai Visionary
+1 Map the Frontier
 1 Viridian Emissary
 1 Wayward Swordtooth
 1 Hour of Promise
@@ -41,10 +41,10 @@
 1 Tireless Tracker
 1 Return of the Wildspeaker
 1 Garruk's Uprising
-1 Thrill of Possibility
+1 Obliterate
 1 Life from the Loam
 1 Winding Way
-1 Dragon Fodder
+1 Vengeful Regrowth
 1 Crawling Sensation
 1 Escape to the Wilds
 1 Bala Ged Recovery // Bala Ged Sanctuary

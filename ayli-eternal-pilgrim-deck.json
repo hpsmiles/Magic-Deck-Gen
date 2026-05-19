@@ -77,16 +77,16 @@
       "scryfallId": "7b36fba7-71f7-4b7f-bde5-b3a9752ad21c"
     },
     {
-      "name": "Whispersilk Cloak",
+      "name": "Charming Prince",
       "quantity": 1,
       "category": "ramp",
-      "scryfallId": "5a12bfaf-7481-4e6a-98c8-6308d075382b"
+      "scryfallId": "aa7b47e1-7e32-4f2f-aecf-bac7ca197081"
     },
     {
-      "name": "Defile",
+      "name": "Blood Seeker",
       "quantity": 1,
       "category": "creature",
-      "scryfallId": "5bcb4398-edd1-41a7-a496-b12bce22ceb6"
+      "scryfallId": "fe88cbee-5f6c-47e0-8a84-192c4c2ca984"
     },
     {
       "name": "Blood Artist",
@@ -119,10 +119,10 @@
       "scryfallId": "b5bb89dd-9d31-49d9-ba54-4a04798e515e"
     },
     {
-      "name": "Village Rites",
+      "name": "Vengeful Bloodwitch",
       "quantity": 1,
       "category": "draw",
-      "scryfallId": "42ed35e9-51cd-468a-86a9-9412553cf50d"
+      "scryfallId": "bd0c12dd-f138-45c0-9614-d83a1d8e8399"
     },
     {
       "name": "Corrupted Conviction",
@@ -131,10 +131,10 @@
       "scryfallId": "8046f892-3317-4ef7-9cf7-97b9060540c8"
     },
     {
-      "name": "Deadly Dispute",
+      "name": "Fake Your Own Death",
       "quantity": 1,
       "category": "draw",
-      "scryfallId": "b22ef77b-67a3-45d3-9d18-12b7b124cbf4"
+      "scryfallId": "693635a6-df50-44c5-9598-0c79b45d4df4"
     },
     {
       "name": "Path to Exile",
@@ -179,10 +179,10 @@
       "scryfallId": "7737b578-8ae3-4846-b508-93ef40f25244"
     },
     {
-      "name": "Wrath of God",
+      "name": "Fumigate",
       "quantity": 1,
       "category": "removal",
-      "scryfallId": "537d2b05-3f52-45d6-8fe3-26282085d0c6"
+      "scryfallId": "976f6850-e646-4b51-a103-25240658672d"
     },
     {
       "name": "Massacre Wurm",
@@ -233,10 +233,10 @@
       "scryfallId": "f229b0e6-1ffd-410e-b04b-a0afc179c58c"
     },
     {
-      "name": "Macabre Waltz",
+      "name": "Helpful Hunter",
       "quantity": 1,
       "category": "draw",
-      "scryfallId": "4d1f3c84-89ba-4426-a80b-d524f172c912"
+      "scryfallId": "1b9a0e91-80b5-428f-8f08-931d0631be14"
     },
     {
       "name": "Sol Ring",
@@ -299,10 +299,10 @@
       "scryfallId": "f06ab823-9591-460d-a896-3073d9843df0"
     },
     {
-      "name": "Sevinne's Reclamation",
+      "name": "Lyra Dawnbringer",
       "quantity": 1,
       "category": "draw",
-      "scryfallId": "8deab1ef-4219-4767-a3c4-b61250d0ebe0"
+      "scryfallId": "f9fa30b6-3a33-46fd-8b32-ac1cfa41500d"
     },
     {
       "name": "Kambal, Profiteering Mayor",
@@ -311,10 +311,10 @@
       "scryfallId": "d53a775d-5898-41a8-b404-9b7d4721c6ba"
     },
     {
-      "name": "Lurrus of the Dream-Den",
+      "name": "Rhox Faithmender",
       "quantity": 1,
       "category": "creature",
-      "scryfallId": "5ad36fb2-c44e-4085-ba0d-54277841ad3a"
+      "scryfallId": "c79a8938-aae6-42ff-888c-2783e11a8d4f"
     },
     {
       "name": "Undying Malice",
@@ -461,10 +461,10 @@
       "scryfallId": "8d8c5284-7f56-46e5-8226-1e5cedf2aeb9"
     },
     {
-      "name": "Krosan Verge",
+      "name": "Cactus Preserve",
       "quantity": 1,
       "category": "land",
-      "scryfallId": "19fc5bec-f877-430c-8e83-e6c5fe97f3c4"
+      "scryfallId": "ad9d426f-5870-42bb-a589-9218f7e35d62"
     },
     {
       "name": "Demolition Field",
@@ -473,10 +473,10 @@
       "scryfallId": "0c7e51b6-4898-4632-b39c-3ce438caa882"
     },
     {
-      "name": "Endless Sands",
+      "name": "Sandstorm Verge",
       "quantity": 1,
       "category": "land",
-      "scryfallId": "f436df63-41b9-416d-8e41-035261d4d0cc"
+      "scryfallId": "3ab4e0a4-2faf-456b-99e3-ee06c008538c"
     },
     {
       "name": "Dunes of the Dead",
@@ -485,10 +485,10 @@
       "scryfallId": "cd86b0af-9c26-4c3a-8e1e-74a28263bd83"
     },
     {
-      "name": "Hostile Desert",
+      "name": "Conduit Pylons",
       "quantity": 1,
       "category": "land",
-      "scryfallId": "d71031c2-7379-4d83-b6d6-61f3104593c4"
+      "scryfallId": "5ffa48cc-b991-4d47-b7ec-cf678915c758"
     },
     {
       "name": "Bucolic Ranch",

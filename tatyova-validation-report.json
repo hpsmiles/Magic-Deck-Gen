@@ -1,25 +1,25 @@
 {
   "metadata": {
-    "deckFile": "C:\\aaa\\code\\Magic-Deck-Gen\\ayli-eternal-pilgrim-deck.json",
+    "deckFile": "C:\\aaa\\code\\Magic-Deck-Gen\\tatyova-benthic-druid-deck.json",
     "collectionFile": "C:\\aaa\\code\\Magic-Deck-Gen\\photo-collection.json",
     "format": "commander",
-    "validatedAt": "2026-05-19T00:55:02.565Z"
+    "validatedAt": "2026-05-19T00:55:08.627Z"
   },
   "valid": true,
   "errors": [],
   "warnings": [],
   "manaCurve": {
-    "0": 39,
-    "1": 11,
-    "2": 22,
-    "3": 18,
-    "4": 5,
+    "0": 38,
+    "1": 10,
+    "2": 18,
+    "3": 17,
+    "4": 8,
     "5": 3,
-    "6+": 2
+    "6+": 6
   },
   "summary": {
     "totalCards": 100,
-    "uniqueCards": 81,
+    "uniqueCards": 100,
     "formatLegal": true,
     "availableInCollection": true
   }

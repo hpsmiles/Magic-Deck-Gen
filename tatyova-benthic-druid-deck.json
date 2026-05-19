@@ -1,0 +1,619 @@
+{
+  "metadata": {
+    "format": "commander",
+    "strategy": "landfall draw - ramp into extra land drops, draw cards from Tatyova triggers, control with blue interaction",
+    "commander": "Tatyova, Benthic Druid",
+    "colors": [
+      "G",
+      "U"
+    ],
+    "createdAt": "2026-05-19T..."
+  },
+  "mainboard": [
+    {
+      "name": "Tatyova, Benthic Druid",
+      "quantity": 1,
+      "category": "commander",
+      "scryfallId": "eabc978a-0666-472d-bdc6-d4b29d29eca4"
+    },
+    {
+      "name": "Rampaging Baloths",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "84aa18de-6acc-46cc-8e28-3046790a6751"
+    },
+    {
+      "name": "Hedron Crab",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "d109b70e-862f-4d8a-8b40-ef6dc904868f"
+    },
+    {
+      "name": "Patient Naturalist",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "1dd17cea-9e8c-4dba-b6ab-a6b9de87a306"
+    },
+    {
+      "name": "Turntimber Sower",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "11bdff1d-4542-4c71-af00-731d6651b492"
+    },
+    {
+      "name": "Dune Chanter",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "cbed084b-c0bc-4c05-9a89-ce4630f0897c"
+    },
+    {
+      "name": "Harrow",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "3e76be46-cf81-4fef-bc5b-f87666cb0413"
+    },
+    {
+      "name": "Circuitous Route",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "a806dec2-d4f9-4f8d-a1dd-170777941131"
+    },
+    {
+      "name": "Springbloom Druid",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "17d67b88-3f76-401f-b04a-f2bcaab4aa97"
+    },
+    {
+      "name": "Satyr Wayfinder",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "8bbbe65d-7162-42fb-94ee-d835d6c3f02a"
+    },
+    {
+      "name": "Eccentric Farmer",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "fe2a1718-eae1-4330-b494-c3088b992aae"
+    },
+    {
+      "name": "Map the Frontier",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "165f4428-e1a1-477d-bd90-138189e88163"
+    },
+    {
+      "name": "Grow from the Ashes",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "42525f8a-aee7-4811-8f05-471b559c2c4a"
+    },
+    {
+      "name": "Dance of the Tumbleweeds",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "caf0e715-befb-4904-82e6-d3f8c7fbd454"
+    },
+    {
+      "name": "Pilgrim's Eye",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "48bfc25b-f73c-431c-b173-adcd65c5d491"
+    },
+    {
+      "name": "Campus Guide",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "43c59814-3167-4b05-bb85-6c736f3956a4"
+    },
+    {
+      "name": "Ponder",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "dc69f960-68ba-4315-8146-6a7a82047503"
+    },
+    {
+      "name": "Opt",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "bbc99a51-1501-4525-a3cc-f48249b64bed"
+    },
+    {
+      "name": "Preordain",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "dd29a0e5-c1de-4e8a-8866-715e9f9cde1f"
+    },
+    {
+      "name": "Chart a Course",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "7599d459-fe71-48f4-8c65-0f519bb63a68"
+    },
+    {
+      "name": "Think Twice",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "ce79538b-20a4-42f8-934f-bc4e2723133e"
+    },
+    {
+      "name": "Dictate of Kruphix",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "b5e4087b-e692-4eb2-bb59-ff2a001d6dd4"
+    },
+    {
+      "name": "Spectral Sailor",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "5ef30b6c-0806-4bf6-9a84-c2aea8d84cf1"
+    },
+    {
+      "name": "Garruk's Packleader",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "dafeafa0-b937-4387-8626-449a810486b4"
+    },
+    {
+      "name": "Finale of Revelation",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "0a77e063-e8f6-4cb2-954e-74cf41ce73da"
+    },
+    {
+      "name": "Thopter Spy Network",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "babc5799-31f3-452e-a61d-5c11f9f81bf9"
+    },
+    {
+      "name": "Llanowar Elves",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "6a0b230b-d391-4998-a3f7-7b158a0ec2cd"
+    },
+    {
+      "name": "Chromatic Lantern",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "68625010-3e4e-4400-b503-bf381a7fd81b"
+    },
+    {
+      "name": "Hedron Archive",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "535b9ac6-dba2-4162-86ed-df3e9fad0306"
+    },
+    {
+      "name": "Negate",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "52d58fe4-6070-4022-9cd7-c35a11b44525"
+    },
+    {
+      "name": "Mana Leak",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "179236d9-6fe2-4db6-bdfb-f851e8d531a2"
+    },
+    {
+      "name": "Aetherize",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "1e5530fc-0291-4a17-b048-c5d24e6f51d8"
+    },
+    {
+      "name": "Into the Roil",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "25edefa9-9fff-4b71-83ae-696c196a795c"
+    },
+    {
+      "name": "Slip Out the Back",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "d9d9fbbb-ed6c-45f7-a1d8-f9d29ae7930f"
+    },
+    {
+      "name": "March of Swirling Mist",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "100171d8-7436-44c8-b4cb-0101ffa05c25"
+    },
+    {
+      "name": "Snakeskin Veil",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "a3d2c692-7566-468e-9c86-47a9f768fde2"
+    },
+    {
+      "name": "Refute",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "38806934-dd9c-4ad4-a59c-a16dce03a14a"
+    },
+    {
+      "name": "Prime Speaker Zegana",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "d2f007b0-b578-44f8-be65-cd9e2ac56e09"
+    },
+    {
+      "name": "Nantuko Cultivator",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "c6e02dbb-4cbb-469a-a377-c856625f956f"
+    },
+    {
+      "name": "Outcaster Greenblade",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "c9458f0f-5593-4ac9-934c-e215ef8093a7"
+    },
+    {
+      "name": "Rite of Replication",
+      "quantity": 1,
+      "category": "sorcery",
+      "scryfallId": "5032d71d-d9f8-498c-97d1-271c2e9c1c47"
+    },
+    {
+      "name": "Pelakka Wurm",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "304c635c-de4d-46ee-8ab0-e5c4d55b61b3"
+    },
+    {
+      "name": "The Mending of Dominaria",
+      "quantity": 1,
+      "category": "enchantment",
+      "scryfallId": "6887f55f-7ac0-49b3-a3ed-6cdbd0ce7fe0"
+    },
+    {
+      "name": "Primeval Bounty",
+      "quantity": 1,
+      "category": "enchantment",
+      "scryfallId": "332c9742-dc3b-48e5-8736-7724fae1b4c4"
+    },
+    {
+      "name": "Jace's Erasure",
+      "quantity": 1,
+      "category": "enchantment",
+      "scryfallId": "970f4f34-f834-41a7-aff1-7cef82cefc74"
+    },
+    {
+      "name": "Mischievous Mystic",
+      "quantity": 1,
+      "category": "artifact",
+      "scryfallId": "20d89cec-528b-4b2a-87db-e11ce0000622"
+    },
+    {
+      "name": "Temple of Mystery",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "258077cf-edef-40fe-ab46-03c965ebe990"
+    },
+    {
+      "name": "Thornwood Falls",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "ebb502c2-5fd0-46a9-b77d-010f4a942056"
+    },
+    {
+      "name": "Simic Guildgate",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "96590855-1ee5-4d69-9070-776e23f71976"
+    },
+    {
+      "name": "Botanical Sanctum",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "cc18d5f4-a56a-4f7d-9f56-ccc92cbfb7f7"
+    },
+    {
+      "name": "Evolving Wilds",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "a30f5555-2fbe-4c88-9e4f-1f2e81ea6cfd"
+    },
+    {
+      "name": "Terramorphic Expanse",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "9a4c5629-fadd-42b9-850f-9f8586a2ca50"
+    },
+    {
+      "name": "Krosan Verge",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "19fc5bec-f877-430c-8e83-e6c5fe97f3c4"
+    },
+    {
+      "name": "Bucolic Ranch",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "6c4f6b81-53d0-49fb-b404-c2ad67de7493"
+    },
+    {
+      "name": "Desert of the Indomitable",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5728f3ec-62bc-4c56-9242-bc2a5fa175ee"
+    },
+    {
+      "name": "Conduit Pylons",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5ffa48cc-b991-4d47-b7ec-cf678915c758"
+    },
+    {
+      "name": "Maze's End",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "ea9a4d1a-79dd-4b15-8e3b-f111f16d6bfc"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Heraldic Banner",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "743ea709-dbb3-4db8-a2ce-544f47eb6339"
+    },
+    {
+      "name": "Steel Hellkite",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "548cbc66-d915-4b94-86da-4c909a1ce645"
+    },
+    {
+      "name": "Broken Wings",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "1d7d5b71-7c1b-4fc2-a5ec-7285e17ffe0f"
+    },
+    {
+      "name": "Fierce Empath",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "28a1dd7f-2e42-4062-a941-b489b98a49fc"
+    },
+    {
+      "name": "Genesis Hydra",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "55502dd7-a92b-41bc-b6b1-8e0347649faf"
+    },
+    {
+      "name": "Augury Owl",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "4e5b8297-406e-4aef-ba46-867c1bf4cc8e"
+    },
+    {
+      "name": "Duelist of the Mind",
+      "quantity": 1,
+      "category": "creature",
+      "scryfallId": "2b58e47b-c165-4a58-aa2a-033a35645adc"
+    },
+    {
+      "name": "Cancel",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "475bff39-220a-4490-9c2e-d311e306a6db"
+    },
+    {
+      "name": "Essence Scatter",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "32840097-0531-4c43-b6a8-e76c17420b04"
+    },
+    {
+      "name": "Unsummon",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "2815d8e6-3668-4b9d-abe6-eca6a500707d"
+    },
+    {
+      "name": "Naturalize",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "390c40ba-2464-44ae-8d67-93c72ab3c425"
+    },
+    {
+      "name": "Run Away Together",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "35c56aff-1f0f-464a-b705-d67803e3d060"
+    },
+    {
+      "name": "Painted Bluffs",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "f7ed919b-95ff-40fe-8f53-5d462c5d0205"
+    },
+    {
+      "name": "Mirage Mesa",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "c3d2e816-c06d-4c5d-98fe-c350d8cfab27"
+    },
+    {
+      "name": "Cactus Preserve",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "ad9d426f-5870-42bb-a589-9218f7e35d62"
+    },
+    {
+      "name": "Forest",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "5f533364-0f91-4e49-aaeb-83c4c1f6d316"
+    },
+    {
+      "name": "Island",
+      "quantity": 1,
+      "category": "land",
+      "scryfallId": "739aaaac-c424-4ea7-a084-62a6fc0438b0"
+    },
+    {
+      "name": "Trygon Predator",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "cdb88a22-8086-4bf7-89e8-cce929440dd8"
+    },
+    {
+      "name": "Conduit of Worlds",
+      "quantity": 1,
+      "category": "ramp",
+      "scryfallId": "3930cca5-f10c-48eb-8ec8-2df521f5dfe9"
+    },
+    {
+      "name": "Perpetual Timepiece",
+      "quantity": 1,
+      "category": "draw",
+      "scryfallId": "6edbedf9-273f-4d7f-80a2-705858bd4d6d"
+    },
+    {
+      "name": "River's Rebuke",
+      "quantity": 1,
+      "category": "removal",
+      "scryfallId": "32ae984e-5d1e-4497-9a71-7406f78c09f3"
+    }
+  ],
+  "maybeboard": [],
+  "reservedDecks": [
+    "omnath-locus-of-rage-deck.json",
+    "ayli-eternal-pilgrim-deck.json"
+  ]
+}

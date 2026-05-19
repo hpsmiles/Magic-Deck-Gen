@@ -9,16 +9,16 @@
 1 Child of Night
 1 Exsanguinate
 1 Basilisk Collar
-1 Whispersilk Cloak
-1 Defile
+1 Charming Prince
+1 Blood Seeker
 1 Blood Artist
 1 Zulaport Cutthroat
 1 Viscera Seer
 1 Vampiric Rites
 1 Skullclamp
-1 Village Rites
+1 Vengeful Bloodwitch
 1 Corrupted Conviction
-1 Deadly Dispute
+1 Fake Your Own Death
 1 Path to Exile
 1 Anguished Unmaking
 1 Mortify
@@ -26,7 +26,7 @@
 1 Murder
 1 Doom Blade
 1 Grasp of Darkness
-1 Wrath of God
+1 Fumigate
 1 Massacre Wurm
 1 Feed the Swarm
 1 Phyrexian Arena
@@ -35,7 +35,7 @@
 1 Inspiring Overseer
 1 Mazemind Tome
 1 Midnight Reaper
-1 Macabre Waltz
+1 Helpful Hunter
 1 Sol Ring
 1 Arcane Signet
 1 Mind Stone
@@ -46,9 +46,9 @@
 1 Solemn Simulacrum
 1 Sun Titan
 1 Cadaver Imp
-1 Sevinne's Reclamation
+1 Lyra Dawnbringer
 1 Kambal, Profiteering Mayor
-1 Lurrus of the Dream-Den
+1 Rhox Faithmender
 1 Undying Malice
 1 Felidar Retreat
 1 Stroke of Midnight
@@ -73,9 +73,9 @@
 1 Cryptic Caves
 1 Shefet Dunes
 1 Desert of the True
-1 Krosan Verge
+1 Cactus Preserve
 1 Demolition Field
-1 Endless Sands
+1 Sandstorm Verge
 1 Dunes of the Dead
-1 Hostile Desert
+1 Conduit Pylons
 1 Bucolic Ranch
