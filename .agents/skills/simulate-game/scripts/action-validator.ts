@@ -1,5 +1,6 @@
 import type {
   CardInstance,
+  CommandZoneCard,
   GameAction,
   GameState,
   LegalActions,
@@ -56,6 +57,19 @@ export function getLegalActions(state: GameState): LegalActions {
     );
   });
 
+  // Castable commanders: commanders in the command zone that can be afforded (with tax)
+  const castableCommanders = state.commandZone.filter((cz) => {
+    if (cz.instance.owner !== state.activePlayerIndex) return false;
+    if (isLandCard(cz.instance)) return false;
+    const tax = getCommanderTax(state, state.activePlayerIndex);
+    return canAffordSpell(
+      cz.instance.card,
+      activePlayer.manaPool,
+      availableManaAbilities,
+      tax
+    );
+  });
+
   // Playable lands: land cards in hand when land plays remaining
   const playableLands =
     activePlayer.landPlaysRemaining > 0
@@ -79,6 +93,7 @@ export function getLegalActions(state: GameState): LegalActions {
 
   return {
     castableSpells,
+    castableCommanders,
     playableLands,
     activatableAbilities,
     canAttack,
@@ -104,23 +119,40 @@ export function validateAction(
       if (!action.cardId) {
         return { legal: false, reason: 'No cardId provided for cast action' };
       }
+      // Check hand first
       const cardInHand = activePlayer.hand.find((c) => c.id === action.cardId);
-      if (!cardInHand) {
-        return {
-          legal: false,
-          reason: `Card ${action.cardId} is not in active player's hand`,
-        };
+      if (cardInHand) {
+        const isCastable = legalActions.castableSpells.some(
+          (c) => c.id === action.cardId
+        );
+        if (!isCastable) {
+          return {
+            legal: false,
+            reason: `Card ${action.cardId} is not castable (insufficient mana or is a land)`,
+          };
+        }
+        return { legal: true };
       }
-      const isCastable = legalActions.castableSpells.some(
-        (c) => c.id === action.cardId
+      // Check command zone (commander cast)
+      const commanderInZone = state.commandZone.find(
+        (cz) => cz.instance.id === action.cardId && cz.instance.owner === state.activePlayerIndex
       );
-      if (!isCastable) {
-        return {
-          legal: false,
-          reason: `Card ${action.cardId} is not castable (insufficient mana or is a land)`,
-        };
+      if (commanderInZone) {
+        const isCastable = legalActions.castableCommanders.some(
+          (cz) => cz.instance.id === action.cardId
+        );
+        if (!isCastable) {
+          return {
+            legal: false,
+            reason: `Commander ${action.cardId} is not castable (insufficient mana including commander tax)`,
+          };
+        }
+        return { legal: true };
       }
-      return { legal: true };
+      return {
+        legal: false,
+        reason: `Card ${action.cardId} is not in active player's hand or command zone`,
+      };
     }
 
     case 'play_land': {
@@ -267,15 +299,17 @@ export function validateAction(
 
 /**
  * Returns true if any non-pass action is available to the active player.
+ * Note: canBlock is only relevant during the declare_blockers step,
+ * so it's excluded from this check (used for main phase decisions).
  */
 export function hasActionsAvailable(state: GameState): boolean {
   const legal = getLegalActions(state);
   return (
     legal.castableSpells.length > 0 ||
+    legal.castableCommanders.length > 0 ||
     legal.playableLands.length > 0 ||
     legal.activatableAbilities.length > 0 ||
     legal.canAttack.length > 0 ||
-    legal.canBlock.length > 0 ||
     legal.canRespond
   );
 }

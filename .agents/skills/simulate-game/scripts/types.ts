@@ -142,6 +142,7 @@ export interface ValidationResult {
 
 export interface LegalActions {
   castableSpells: CardInstance[];
+  castableCommanders: CommandZoneCard[];
   playableLands: CardInstance[];
   activatableAbilities: Permanent[];
   canAttack: Permanent[];

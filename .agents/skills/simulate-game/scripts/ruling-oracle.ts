@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import OpenAI from 'openai';
 import type { RulingRequest, RulingResponse } from './types.js';
+import { getLLMClient, getDefaultModel } from './llm-agent.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -43,22 +43,6 @@ export function saveCache(cache: Record<string, RulingResponse>): void {
 }
 
 /**
- * Creates an OpenAI client using environment variables for provider/model configuration.
- */
-function createLLMClient(): { client: OpenAI; model: string } {
-  const provider = process.env.LLM_PROVIDER ?? 'openai';
-  const model = process.env.LLM_MODEL ?? 'gpt-4o';
-  const apiKey = process.env.LLM_API_KEY ?? process.env.OPENAI_API_KEY ?? '';
-
-  const client = new OpenAI({
-    apiKey: apiKey || 'placeholder',
-    baseURL: process.env.LLM_BASE_URL ?? (provider !== 'openai' ? `https://${provider}.com/v1` : undefined),
-  });
-
-  return { client, model };
-}
-
-/**
  * Gets a ruling for an MTG interaction. Checks cache first, then calls LLM.
  * On parse failure or LLM error, returns a fallback response.
  */
@@ -88,7 +72,8 @@ export async function getRuling(request: RulingRequest): Promise<RulingResponse>
   ].join('\n');
 
   try {
-    const { client, model } = createLLMClient();
+    const client = getLLMClient();
+    const model = getDefaultModel();
 
     const response = await client.chat.completions.create({
       model,

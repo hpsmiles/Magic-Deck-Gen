@@ -659,8 +659,8 @@ function executeAction(
 
 /**
  * Executes a cast action:
- * 1. Remove card from hand
- * 2. Pay mana cost (including commander tax)
+ * 1. Remove card from hand OR command zone
+ * 2. Pay mana cost (including commander tax for commanders)
  * 3. For sorceries/instants: resolve immediately, move to graveyard
  * 4. For permanents: put on battlefield
  */
@@ -673,61 +673,101 @@ function executeCast(
 
   const activePlayer = state.activePlayerIndex;
   const player = state.players[activePlayer];
+
+  // Check if casting from hand or command zone
   const cardIndex = player.hand.findIndex((c) => c.id === action.cardId);
-  if (cardIndex === -1) return state;
-
-  const card = player.hand[cardIndex];
-  const typeLine = card.card.typeLine.toLowerCase();
-
-  // Calculate total mana cost — only apply commander tax when casting the commander
-  const isCommanderCast = state.commandZone.some(
-    (cz) => cz.instance.owner === activePlayer && cz.instance.card.scryfallId === card.card.scryfallId
+  const commanderEntry = state.commandZone.find(
+    (cz) => cz.instance.id === action.cardId && cz.instance.owner === activePlayer
   );
-  const commanderTax = isCommanderCast ? getCommanderTax(state, activePlayer) : 0;
-  const totalCost = {
-    white: card.card.manaCost.white,
-    blue: card.card.manaCost.blue,
-    black: card.card.manaCost.black,
-    red: card.card.manaCost.red,
-    green: card.card.manaCost.green,
-    colorless: card.card.manaCost.colorless + commanderTax,
-  };
 
-  // Pay mana cost
-  const newPool = payManaCost(player.manaPool, totalCost);
-  if (newPool === null) return state; // Should not happen if validation passed
+  let card: CardInstance;
+  let currentState: GameState;
 
-  // Remove card from hand
-  const updatedHand = [
-    ...player.hand.slice(0, cardIndex),
-    ...player.hand.slice(cardIndex + 1),
-  ];
+  if (cardIndex !== -1) {
+    // Casting from hand
+    card = player.hand[cardIndex];
 
-  // Update player's mana pool
-  let currentState: GameState = {
-    ...state,
-    players: state.players.map((p, idx) =>
-      idx === activePlayer
-        ? { ...p, hand: updatedHand, manaPool: newPool }
-        : p
-    ),
-    timestamp: state.timestamp + 1,
-  };
+    // Calculate total mana cost — only apply commander tax when casting the commander
+    const isCommanderCast = state.commandZone.some(
+      (cz) => cz.instance.owner === activePlayer && cz.instance.card.scryfallId === card.card.scryfallId
+    );
+    const commanderTax = isCommanderCast ? getCommanderTax(state, activePlayer) : 0;
+    const totalCost = {
+      white: card.card.manaCost.white,
+      blue: card.card.manaCost.blue,
+      black: card.card.manaCost.black,
+      red: card.card.manaCost.red,
+      green: card.card.manaCost.green,
+      colorless: card.card.manaCost.colorless + commanderTax,
+    };
 
-  // If casting from command zone, increment castCount
-  const commanderEntry = currentState.commandZone.find(
-    (cz) => cz.instance.owner === activePlayer && cz.instance.card.scryfallId === card.card.scryfallId
-  );
-  if (commanderEntry) {
+    // Pay mana cost
+    const newPool = payManaCost(player.manaPool, totalCost);
+    if (newPool === null) return state; // Should not happen if validation passed
+
+    // Remove card from hand
+    const updatedHand = [
+      ...player.hand.slice(0, cardIndex),
+      ...player.hand.slice(cardIndex + 1),
+    ];
+
     currentState = {
-      ...currentState,
-      commandZone: currentState.commandZone.map((cz) =>
-        cz.instance.owner === activePlayer && cz.instance.card.scryfallId === card.card.scryfallId
+      ...state,
+      players: state.players.map((p, idx) =>
+        idx === activePlayer
+          ? { ...p, hand: updatedHand, manaPool: newPool }
+          : p
+      ),
+      timestamp: state.timestamp + 1,
+    };
+
+    // If casting the commander, increment castCount
+    if (isCommanderCast) {
+      currentState = {
+        ...currentState,
+        commandZone: currentState.commandZone.map((cz) =>
+          cz.instance.owner === activePlayer && cz.instance.card.scryfallId === card.card.scryfallId
+            ? { ...cz, castCount: cz.castCount + 1 }
+            : cz
+        ),
+      };
+    }
+  } else if (commanderEntry) {
+    // Casting from command zone
+    card = commanderEntry.instance;
+
+    const commanderTax = getCommanderTax(state, activePlayer);
+    const totalCost = {
+      white: card.card.manaCost.white,
+      blue: card.card.manaCost.blue,
+      black: card.card.manaCost.black,
+      red: card.card.manaCost.red,
+      green: card.card.manaCost.green,
+      colorless: card.card.manaCost.colorless + commanderTax,
+    };
+
+    // Pay mana cost
+    const newPool = payManaCost(player.manaPool, totalCost);
+    if (newPool === null) return state;
+
+    // Remove commander from command zone (it will be on the battlefield or graveyard)
+    currentState = {
+      ...state,
+      players: state.players.map((p, idx) =>
+        idx === activePlayer ? { ...p, manaPool: newPool } : p
+      ),
+      commandZone: state.commandZone.map((cz) =>
+        cz.instance.id === action.cardId
           ? { ...cz, castCount: cz.castCount + 1 }
           : cz
       ),
+      timestamp: state.timestamp + 1,
     };
+  } else {
+    return state; // Card not found in hand or command zone
   }
+
+  const typeLine = card.card.typeLine.toLowerCase();
 
   // Determine card type and resolve
   if (typeLine.includes('creature') || typeLine.includes('artifact') ||
@@ -746,7 +786,7 @@ function executeCast(
       phase: currentState.step,
       action: 'cast',
       card: card.card.name,
-      details: `Player ${activePlayer} casts ${card.card.name}`,
+      details: `Player ${activePlayer} casts ${card.card.name}${commanderEntry ? ' from command zone' : ''}`,
     });
   } else {
     // Sorcery/Instant: resolve immediately (v1 simplification), move to graveyard
@@ -768,7 +808,7 @@ function executeCast(
       phase: currentState.step,
       action: 'cast',
       card: card.card.name,
-      details: `Player ${activePlayer} casts ${card.card.name} (resolved immediately)`,
+      details: `Player ${activePlayer} casts ${card.card.name} (resolved immediately)${commanderEntry ? ' from command zone' : ''}`,
     });
   }
 

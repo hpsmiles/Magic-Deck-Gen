@@ -220,9 +220,18 @@ export function buildGameSummary(state: GameState, playerIndex: number): string 
   lines.push('=== COMMANDER INFO ===');
   const commander = state.commandZone.find((cz) => cz.instance.owner === playerIndex);
   if (commander) {
-    lines.push(`  Commander: ${commander.instance.card.name}`);
+    lines.push(`  Commander: ${commander.instance.card.name} [${commander.instance.id}]`);
     lines.push(`  Times cast: ${commander.castCount}`);
     lines.push(`  Commander tax: +${commanderTax} generic mana`);
+    // Check if commander is on the battlefield
+    const onBattlefield = state.battlefield.some(
+      (p) => p.card.scryfallId === commander.instance.card.scryfallId && p.controller === playerIndex
+    );
+    if (onBattlefield) {
+      lines.push('  Status: On the battlefield');
+    } else {
+      lines.push('  Status: In command zone (castable!)');
+    }
   } else {
     lines.push('  (no commander in command zone)');
   }
@@ -249,6 +258,19 @@ export function formatLegalActions(legal: LegalActions): string {
     for (const card of legal.castableSpells) {
       const cost = formatManaCost(card.card.manaCost);
       lines.push(`  [${card.id}] ${card.card.name} (${cost})`);
+    }
+  }
+
+  // Castable commanders
+  lines.push('');
+  lines.push('Castable Commanders (from command zone):');
+  if (legal.castableCommanders.length === 0) {
+    lines.push('  (none)');
+  } else {
+    for (const cz of legal.castableCommanders) {
+      const cost = formatManaCost(cz.instance.card.manaCost);
+      const tax = cz.castCount * 2;
+      lines.push(`  [${cz.instance.id}] ${cz.instance.card.name} (${cost} + ${tax} commander tax) — cast ${cz.castCount} time(s)`);
     }
   }
 
@@ -342,6 +364,7 @@ export async function getAgentDecision(
       'Choose your actions. Respond with JSON: { "actions": [...], "reasoning": "..." }',
       'Each action should have a "type" field (cast, activate, attack, block, pass, play_land, respond).',
       'For cast/play_land: include "cardId". For activate: include "permanentId".',
+      'Commanders can be cast from the command zone using their command zone ID (e.g. "commander-0").',
       'For attack: include "attackers" as { "permanentId": { "type": "player", "id": "targetId" } }.',
       'For block: include "blockers" as { "blockerId": ["attackerId"] }.',
     ].join('\n');

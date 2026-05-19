@@ -260,7 +260,7 @@ export function resolveCombatDamage(
     attackerBlockers.set(block.attackerId, existing);
   }
 
-  // Separate first-strike attackers from regular attackers
+  // Separate first-strike/double-strike attackers from regular attackers
   const firstStrikeAttackers: CombatAssignment[] = [];
   const regularAttackers: CombatAssignment[] = [];
 
@@ -268,18 +268,19 @@ export function resolveCombatDamage(
     const attacker = findPermanent(state, assignment.attackerId);
     if (!attacker) continue;
 
-    if (hasKeyword(attacker, 'First Strike')) {
+    if (hasKeyword(attacker, 'First Strike') || hasKeyword(attacker, 'Double Strike')) {
       firstStrikeAttackers.push(assignment);
-    } else {
+    }
+    if (!hasKeyword(attacker, 'First Strike') || hasKeyword(attacker, 'Double Strike')) {
       regularAttackers.push(assignment);
     }
   }
 
-  // Identify which blockers have first strike
+  // Identify which blockers have first strike or double strike
   const firstStrikeBlockerIds = new Set<string>();
   for (const block of blocks) {
     const blocker = findPermanent(state, block.blockerId);
-    if (blocker && hasKeyword(blocker, 'First Strike')) {
+    if (blocker && (hasKeyword(blocker, 'First Strike') || hasKeyword(blocker, 'Double Strike'))) {
       firstStrikeBlockerIds.add(block.blockerId);
     }
   }
