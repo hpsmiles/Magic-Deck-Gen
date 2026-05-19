@@ -19,6 +19,11 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function safeParseInt(value: string): number | null {
+  const parsed = parseInt(value, 10);
+  return isNaN(parsed) ? null : parsed;
+}
+
 // === Rate-Limited Fetch ===
 
 async function rateLimitedFetch(url: string): Promise<unknown> {
@@ -143,9 +148,9 @@ function scryfallToCardData(scryfall: ScryfallCard): CardData {
     manaCost: parseManaCost(scryfall.mana_cost ?? ''),
     typeLine: scryfall.type_line ?? '',
     oracleText: scryfall.oracle_text ?? '',
-    power: scryfall.power !== null ? parseInt(scryfall.power, 10) : null,
-    toughness: scryfall.toughness !== null ? parseInt(scryfall.toughness, 10) : null,
-    loyalty: scryfall.loyalty !== null ? parseInt(scryfall.loyalty, 10) : null,
+    power: scryfall.power !== null ? safeParseInt(scryfall.power) : null,
+    toughness: scryfall.toughness !== null ? safeParseInt(scryfall.toughness) : null,
+    loyalty: scryfall.loyalty !== null ? safeParseInt(scryfall.loyalty) : null,
     colorIdentity: scryfall.color_identity ?? [],
     keywords: scryfall.keywords ?? [],
   };

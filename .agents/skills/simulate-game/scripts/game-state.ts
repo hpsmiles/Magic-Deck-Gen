@@ -188,9 +188,9 @@ export function addManaToPool(
 }
 
 /**
- * Returns an empty mana pool (all values zeroed).
+ * Returns an empty mana pool (drains the given pool, returning a fresh empty one).
  */
-export function emptyManaPool(pool: ManaPool): ManaPool {
+export function emptyManaPool(_pool: ManaPool): ManaPool {
   return createEmptyManaPool();
 }
 
