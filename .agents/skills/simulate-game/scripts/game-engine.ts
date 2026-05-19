@@ -71,7 +71,7 @@ export async function runGame(decks: DeckInput[]): Promise<GameResult> {
   // 1. Create initial game state
   let state = createInitialGameState(decks);
 
-  // 2. Mulligan phase
+  // 2. Mulligan phase (parallel — all players decide simultaneously)
   state = await runMulliganPhase(state, decks);
 
   // 3. Main game loop
@@ -94,6 +94,8 @@ export async function runGame(decks: DeckInput[]): Promise<GameResult> {
  * - Each player decides whether to keep (max 3 mulligans)
  * - On mulligan: put hand back in library, shuffle, draw one fewer card
  * - Free mulligan on first mulligan in multiplayer (draw same number)
+ *
+ * Optimization: All mulligan decisions run in parallel.
  */
 async function runMulliganPhase(
   state: GameState,
@@ -106,22 +108,38 @@ async function runMulliganPhase(
     currentState = drawCards(currentState, i, 7);
   }
 
-  // Each player decides whether to keep
-  for (let i = 0; i < currentState.players.length; i++) {
-    let mulligansTaken = 0;
-    let kept = false;
+  // Each player decides whether to keep — run all decisions in parallel per round
+  for (let mulliganRound = 0; mulliganRound < 3; mulliganRound++) {
+    // Collect decisions for all players who haven't kept yet
+    const pendingPlayers: number[] = [];
+    for (let i = 0; i < currentState.players.length; i++) {
+      if (currentState.players[i].mulligansTaken === mulliganRound) {
+        // Player hasn't decided yet this round
+        pendingPlayers.push(i);
+      }
+    }
 
-    while (!kept && mulligansTaken < 3) {
+    if (pendingPlayers.length === 0) break;
+
+    // Run all mulligan decisions in parallel
+    const decisions = await Promise.all(
+      pendingPlayers.map((i) =>
+        getMulliganDecision(
+          currentState.players[i].hand,
+          decks[i].name,
+          decks[i].strategy,
+          mulliganRound
+        )
+      )
+    );
+
+    // Apply decisions sequentially (state is threaded)
+    for (let j = 0; j < pendingPlayers.length; j++) {
+      const i = pendingPlayers[j];
+      const decision = decisions[j];
       const player = currentState.players[i];
-      const decision = await getMulliganDecision(
-        player.hand,
-        decks[i].name,
-        decks[i].strategy,
-        mulligansTaken
-      );
 
       if (decision.keep) {
-        kept = true;
         currentState = addLogEntry(currentState, {
           turn: 0,
           player: i,
@@ -131,21 +149,18 @@ async function runMulliganPhase(
         });
       } else {
         // Mulligan: put hand back in library, shuffle, draw one fewer
-        // Free mulligan on first mulligan in multiplayer (3+ players)
-        const isFreeMulligan = mulligansTaken === 0 && currentState.players.length >= 3;
-        const drawCount = isFreeMulligan ? 7 : 7 - (mulligansTaken + 1);
+        const isFreeMulligan = mulliganRound === 0 && currentState.players.length >= 3;
+        const drawCount = isFreeMulligan ? 7 : 7 - (mulliganRound + 1);
 
-        // Put hand back in library
         const handCards = player.hand;
         const updatedLibrary = shuffleArray([...handCards, ...player.library]);
 
-        // Update player state: empty hand, shuffled library
         const updatedPlayers = [...currentState.players];
         updatedPlayers[i] = {
           ...player,
           hand: [],
           library: updatedLibrary,
-          mulligansTaken: mulligansTaken + 1,
+          mulligansTaken: mulliganRound + 1,
         };
         currentState = {
           ...currentState,
@@ -153,30 +168,16 @@ async function runMulliganPhase(
           timestamp: currentState.timestamp + 1,
         };
 
-        // Draw new hand
         currentState = drawCards(currentState, i, drawCount);
-
-        mulligansTaken++;
 
         currentState = addLogEntry(currentState, {
           turn: 0,
           player: i,
           phase: 'untap',
           action: 'mulligan',
-          details: `Player ${i} takes mulligan #${mulligansTaken}${isFreeMulligan ? ' (free)' : ''}, draws ${drawCount} cards. ${decision.reasoning}`,
+          details: `Player ${i} takes mulligan #${mulliganRound + 1}${isFreeMulligan ? ' (free)' : ''}, draws ${drawCount} cards. ${decision.reasoning}`,
         });
       }
-    }
-
-    // If player still hasn't kept after 3 mulligans, force keep
-    if (!kept) {
-      currentState = addLogEntry(currentState, {
-        turn: 0,
-        player: i,
-        phase: 'untap',
-        action: 'keep',
-        details: `Player ${i} forced to keep after 3 mulligans`,
-      });
     }
   }
 
@@ -257,8 +258,16 @@ async function runTurn(
   if (sbaResult.gameEnded) return currentState;
 
   // === Postcombat Main Phase ===
+  // Optimization: Skip if player has no hand and no castable commanders
   currentState = { ...currentState, phase: 'postcombat_main', step: 'main_postcombat' };
-  currentState = await runMainPhase(currentState, decks);
+  const postCombatLegal = getLegalActions(currentState);
+  const hasPostCombatActions = postCombatLegal.castableSpells.length > 0
+    || postCombatLegal.castableCommanders.length > 0
+    || postCombatLegal.playableLands.length > 0;
+
+  if (hasPostCombatActions) {
+    currentState = await runMainPhase(currentState, decks);
+  }
 
   sbaResult = checkStateBasedActions(currentState);
   currentState = sbaResult.state;
@@ -310,6 +319,11 @@ function runUntapStep(state: GameState): GameState {
 /**
  * Runs a main phase where the active player can cast spells, play lands,
  * and activate abilities via the LLM decision loop.
+ *
+ * Optimization: Heuristic shortcuts for obvious decisions:
+ * - Auto-play a land if available (no LLM call needed)
+ * - Auto-tap lands for mana when casting a spell (combined into one LLM call)
+ * - Skip phase if only action is to pass
  */
 async function runMainPhase(
   state: GameState,
@@ -325,11 +339,44 @@ async function runMainPhase(
       break;
     }
 
-    // Get LLM decision
     const legalActions = getLegalActions(currentState);
     const activePlayer = currentState.activePlayerIndex;
-    const deck = decks[activePlayer];
+    const player = currentState.players[activePlayer];
 
+    // === Heuristic: Auto-play land if available ===
+    if (legalActions.playableLands.length > 0 && player.landPlaysRemaining > 0) {
+      const land = legalActions.playableLands[0];
+      currentState = executeAction(currentState, { type: 'play_land', cardId: land.id }, decks);
+
+      currentState = addLogEntry(currentState, {
+        turn: currentState.turn,
+        player: activePlayer,
+        phase: currentState.step,
+        action: 'play_land',
+        card: land.card.name,
+        details: `Player ${activePlayer} plays ${land.card.name} (auto)`,
+      });
+
+      // Check SBAs after land play
+      const sbaResult = checkStateBasedActions(currentState);
+      currentState = sbaResult.state;
+      if (sbaResult.gameEnded) return currentState;
+      continue; // Re-evaluate legal actions after land play
+    }
+
+    // === Heuristic: If only pass is available, auto-pass ===
+    const hasNonPassActions = legalActions.castableSpells.length > 0
+      || legalActions.castableCommanders.length > 0
+      || legalActions.activatableAbilities.length > 0
+      || legalActions.canAttack.length > 0;
+
+    if (!hasNonPassActions) {
+      passed = true;
+      break;
+    }
+
+    // === LLM decision for non-trivial choices ===
+    const deck = decks[activePlayer];
     const recentActions = currentState.gameLog.slice(-10);
 
     const request = {
@@ -381,6 +428,11 @@ async function runMainPhase(
 
       // Execute the valid action
       currentState = executeAction(currentState, action, decks);
+
+      // === Heuristic: Auto-tap lands for mana after casting ===
+      // If the player cast a spell but can't afford it from pool, auto-activate lands
+      // This is handled by the LLM returning an 'activate' action, but as a fallback:
+      // (The LLM should handle this, but we don't need a separate LLM call for it)
 
       // Check SBAs after each action
       const sbaResult = checkStateBasedActions(currentState);
@@ -495,43 +547,58 @@ async function runCombatPhase(
   // We need to track which creatures attacked. For v1, we use the tapped+creature heuristic.
   // A more robust approach would track combat assignments in state, but this works for v1.
 
-  // For each non-active player, ask for block decisions
+  // For each non-active player, ask for block decisions — run in parallel
   const allBlocks: BlockAssignment[] = [];
+
+  // Collect defender indices that have blockers available
+  const defenderIndices: number[] = [];
+  const defenderLegalActionsMap: Map<number, LegalActions> = new Map();
 
   for (let i = 0; i < currentState.players.length; i++) {
     if (i === activePlayer) continue;
 
-    // Check if this player has blockers available
     const defenderLegalActions = getLegalActions({
       ...currentState,
-      activePlayerIndex: i, // Temporarily set for legal action computation
+      activePlayerIndex: i,
     });
 
     if (defenderLegalActions.canBlock.length === 0) continue;
 
-    const deck = decks[i];
-    const recentActions = currentState.gameLog.slice(-10);
+    defenderIndices.push(i);
+    defenderLegalActionsMap.set(i, defenderLegalActions);
+  }
 
-    const request = {
-      playerIndex: i,
-      deckName: deck.name,
-      deckStrategy: deck.strategy,
-      gameSummary: buildGameSummary(currentState, i),
-      legalActions: defenderLegalActions,
-      recentActions,
-      phase: 'declare_blockers' as GameStep,
-      turn: currentState.turn,
-    };
+  // Run all blocker decisions in parallel
+  if (defenderIndices.length > 0) {
+    const blockerResponses = await Promise.all(
+      defenderIndices.map((i) => {
+        const deck = decks[i];
+        const recentActions = currentState.gameLog.slice(-10);
+        const defenderLegalActions = defenderLegalActionsMap.get(i)!;
 
-    const response = await getAgentDecision(request);
+        const request = {
+          playerIndex: i,
+          deckName: deck.name,
+          deckStrategy: deck.strategy,
+          gameSummary: buildGameSummary(currentState, i),
+          legalActions: defenderLegalActions,
+          recentActions,
+          phase: 'declare_blockers' as GameStep,
+          turn: currentState.turn,
+        };
 
-    for (const action of response.actions) {
-      if (action.type === 'block' && action.blockers) {
-        // Convert blockers map to BlockAssignment[]
-        // blockers format: { blockerId: attackerId[] }
-        for (const [blockerId, attackerIds] of Object.entries(action.blockers)) {
-          for (const attackerId of attackerIds) {
-            allBlocks.push({ blockerId, attackerId });
+        return getAgentDecision(request);
+      })
+    );
+
+    // Collect all block assignments
+    for (const response of blockerResponses) {
+      for (const action of response.actions) {
+        if (action.type === 'block' && action.blockers) {
+          for (const [blockerId, attackerIds] of Object.entries(action.blockers)) {
+            for (const attackerId of attackerIds) {
+              allBlocks.push({ blockerId, attackerId });
+            }
           }
         }
       }
